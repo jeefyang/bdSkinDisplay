@@ -1,0 +1,128 @@
+.phoneDisplay {
+    border: 10px solid #722e18;
+    /* position: absolute; */
+    top: 0px;
+    left: 0px;
+    /* display: inline-block; */
+    flex-direction: column;
+    flex: 1;
+    overflow: auto;
+
+}
+
+.cmd {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* overflow: auto; */
+}
+
+.phoneCmd {
+    position: relative;
+    background-color: red;
+    display: flex;
+    flex: 1;
+    overflow: auto;
+    flex-direction: column;
+}
+
+.phonePos {
+    /* position: absolute; */
+    /* width: fit-content; */
+    /* height: fit-content; */
+    display: inline-block;
+    /* flex: 1; */
+    white-space: nowrap;
+    /* overflow: auto; */
+}
+
+.childPhone {
+    width: 100%;
+}
+
+.phoneCand {
+    position: relative;
+    /* flex: 1; */
+    height: fit-content;
+}
+
+.phoneBoard {
+    position: relative;
+    flex: 1;
+    /* background-color: red; */
+}
+
+.op {
+    background-color: yellow;
+    width: 100%;
+    /* position: relative; */
+    flex: 1;
+    display: flex;
+    overflow: auto;
+}
+
+.phoneFile {
+    background-color: green;
+    height: 100%;
+    position: relative;
+    flex: 1;
+    width: 50%;
+    overflow: auto;
+}
+
+.phoneOP {
+    background-color: #176fc6;
+    height: 100%;
+    position: relative;
+    flex: 1;
+    width: fit-content;
+    overflow: auto;
+}
+
+.body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+    flex-direction: column;
+
+    /* display: inline-block; */
+}
+
+body {
+    display: block;
+    margin: 8px;
+    position: absolute;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+
+}
+
+.moveDiv {
+    width: 20px;
+    height: 20px;
+    /* background-color: orange; */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    transform: translate(-10px, -10px);
+}
+
+.moveDiv:hover {
+    cursor: move;
+}
+
+.opBtn {
+    margin: 10px;
+}
+
+.childStyleBox {
+    margin: 10px;
+    border: 2px solid green;
+}
+
+.childOffsetBox {
+    margin: 10px;
+    border: 2px solid green;
+}
