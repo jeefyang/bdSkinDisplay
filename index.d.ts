@@ -40,6 +40,8 @@ declare class JAction {
     reFreshPhoneSkin(this: JMain): Promise<void>;
     /** 设置多选高亮 */
     setKeySelectHL(this: JMain, keyName: string, handlerDiv: HTMLElement): void;
+    getNewNum(this: JMain, prevKey: string, baseData: any, count?: number): string;
+    createNewBoardKey(this: JMain): void;
 }
 /** 输入码 */
 declare type BoardInputType = {
@@ -645,7 +647,7 @@ declare class JBoardChildDom {
 }
 declare type childDomType<K extends string = string> = {
     key: K;
-    type?: "normal" | "select" | "style" | "color" | "offset";
+    type?: "normal" | "select" | "style" | "color" | "offset" | "key";
     title: string;
     tip?: string;
     select?: {
@@ -753,9 +755,11 @@ declare class JMain {
         multiAdd: string;
         /** 选中高亮key颜色 */
         selecthlKeyColor: string;
+        /** 候选框名,这个不能更改,只能由其他数据决定 */
+        candName: string;
+        /** 冒泡名,这个不能更改,只能由其他数据决定 */
+        hintName: string;
     };
-    /** 候选框名 */
-    candName: string;
     /** 样式数据 */
     cssData: any;
     /** 键盘数据 */
@@ -764,6 +768,8 @@ declare class JMain {
     genData: any;
     /** 候选框数据 */
     candData: any;
+    /** 冒泡数据 */
+    hintData: any;
     /** 图片数据 */
     imageData: {
         [propName: string]: JImgData;
@@ -785,6 +791,8 @@ declare class JMain {
     get genUrl(): string;
     /** 候选框路径 */
     get candUrl(): string;
+    /** 冒泡路径 */
+    get hintUrl(): string;
     constructor();
 }
 declare class JOPDiv {
@@ -800,8 +808,10 @@ declare class JOPDiv {
     createChildFileDiv(this: JMain, op: {
         title: string;
         value: string;
-        inputFunc: (s: string) => void;
+        inputFunc?: (s: string) => void;
         downloadData?: any;
+        isOnlyRead?: boolean;
+        exName?: string;
     }): void;
 }
 /** 创建样式的元素 */

@@ -67,17 +67,44 @@ class JBoardChildDom {
         if (!this.op.selectSingleKey) {
             return
         }
+        let titleDiv = document.createElement("div")
+        let titleDiv_Label = document.createElement("label")
+        titleDiv_Label.innerHTML = "单键:KEY"
+        let titleDiv_Input = document.createElement("input")
+        titleDiv_Input.value = this.op.selectSingleKey.replace("KEY", "")
+        titleDiv_Input.type = "number"
+        titleDiv_Input.addEventListener("change", () => {
+            let name = "KEY" + (titleDiv_Input.value)
+            if (!this.keyDomList[name]) {
+                let check = window.confirm("不存在,需要创建吗?")
+                if (check) {
+                    this.boardData[name] = {}
+                    let p: BoardPanelType = this.boardData["PANAL"]
+                    p.KEY_NUM = (Number(p.KEY_NUM) + 1).toString()
+                    this.op.selectSingleKey = name
+                    saveJson(this.boardUrl, this.boardData)
+                    this.saveOPJson()
+                }
+                new JMain()
+                return
+            }
+            this.op.selectSingleKey = name
+            this.saveOPJson()
+            new JMain()
+        })
+        titleDiv.append(titleDiv_Label, titleDiv_Input)
+        this.phoneCmdDiv.append(titleDiv)
         let inputList: childDomType<keyof BoardKeyType>[] = [
             { key: "BACK_STYLE", title: "按键背景指定样式:", type: "style" },
             { key: "FORE_STYLE", title: "按键前景指定样式:", tip: "允许多个前景,前景间用英文逗号分隔\nFORE_STYLE=1,88,200\n表示此键有 1,88,200 三个前景", type: "style" },
             { key: "POS_TYPE", title: "偏移:", tip: "此参数和前景对应,一个参数对应一个前景,同样以英文逗号分隔,表示前景的偏移类型,序号和 gen.ini 中的[OFFSET*]的序号对应,如果无对应值则为 0,表示不偏移,居中对齐(下面的表格会提到 OFFSET 属性,已用阴影填充加强显示)\nFORE_STYLE=1,88,200\nPOS_TYPE=0,2,10\n表示前景 1,距中显示；前景 88 使用2 号偏移；前景 200 使用 10 号偏移（序号由 gen.ini 生成）", type: "offset" },
             { key: "VIEW_RECT", title: "坐标:", tip: "按键绘制时的坐标 X,Y 及宽 W,高 H\nVIEW_RECT=45,3,60,70\n在 PANAL 面板(45,3)处绘制一个宽60 高 70 的键" },
             { key: "TOUCH_RECT", title: "按键点击范围补丁:", tip: "控制该键的实际点击位置X,Y 和宽 W,高 H\n当 TOUCH_RECT=0,0,0,0 或宽,高为 0 时,表示此键不可点击（常用做背景显示功能）\nVIEW_RECT=45,3,60,70\nTOUCH_RECT=43,0,66,72\n表示此键的实际点击范围是(43,0)处宽 66 高 72 的矩阵." },
-            { key: "UP", title: "向上划:" },
-            { key: "DOWN", title: "向下划:" },
-            { key: "LEFT", title: "向左划:" },
-            { key: "RIGHT", title: "向右划:" },
-            { key: "CENTER", title: "直接点击:" },
+            { key: "UP", title: "向上划:", type: "key" },
+            { key: "DOWN", title: "向下划:", type: "key" },
+            { key: "LEFT", title: "向左划:", type: "key" },
+            { key: "RIGHT", title: "向右划:", type: "key" },
+            { key: "CENTER", title: "直接点击:", type: "key" },
             { key: "SHOW", title: "直接点击后传给内核的键值:", tip: "SHOW 的作用：向内核反馈点击此键后的键值,供内核判断该键类型.能在输入码上回馈键值." },
             { key: "HOLD", title: "长按:", tip: "长按后对应的字符或功能\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLD=F1\n按住为 F1 打开符号面板\n注：HOLD=字符时,此字符会参与输入码." },
             { key: "HOLDSYM", title: "长按后对应的字符集:", tip: "（字符之间无分隔符）,以字符形式直接输出\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLDSYM=ABCD@#\n表示长按对应的字符集是 ABCD@#\n然后通过手势选择字符,字符间无间隔.\n当 HOLDSYM=单字符时,表示此字符直接上屏." },
@@ -100,6 +127,32 @@ class JBoardChildDom {
         title.innerHTML = `图标数据\n${this.op.selectSingleKey}`
         title.style.textAlign = "center"
         this.phoneCmdDiv.append(title)
+        let titleDiv = document.createElement("div")
+        let titleDiv_Label = document.createElement("label")
+        titleDiv_Label.innerHTML = "图标:ICON"
+        let titleDiv_Input = document.createElement("input")
+        titleDiv_Input.value = this.op.selectSingleKey.replace("ICON", "")
+        titleDiv_Input.type = "number"
+        titleDiv_Input.addEventListener("change", () => {
+            let name = "ICON" + (titleDiv_Input.value)
+            if (!this.keyDomList[name]) {
+                let check = window.confirm("不存在,需要创建吗?")
+                if (check) {
+                    this.candData[name] = {}
+                    let p: CndCandType = this.candData["CAND"]
+                    p.ICON_NUM = (Number(p.ICON_NUM) + 1).toString()
+                    saveJson(this.candUrl, this.candData)
+                    this.saveOPJson()
+                }
+                new JMain()
+                return
+            }
+            this.op.selectSingleKey = name
+            this.saveOPJson()
+            new JMain()
+        })
+        titleDiv.append(titleDiv_Label, titleDiv_Input)
+        this.phoneCmdDiv.append(titleDiv)
         if (!this.op.selectSingleKey) {
             return
         }
@@ -107,7 +160,7 @@ class JBoardChildDom {
             { key: "BACK_STYLE", title: "图标背景样式:", type: "style" },
             { key: "FORE_STYLE", title: "图标前景样式:", type: "style" },
             { key: "SIZE", title: "图标大小:", tip: "（宽,高）\nSIZE=45,60\n自己测试过,这里一般不指拉伸,指居中" },
-            { key: "KEY", title: "按下后执行的操作", tip: "注：ICON 不支持点划操作,不支持输出字符和输入码（1,2,3,4 除外,会自动转换成光标移动功能,例 KEY=1）\nKEY=F31\n按下后执行 F31（logo 菜单）" },
+            { key: "KEY", title: "按下后执行的操作", tip: "注：ICON 不支持点划操作,不支持输出字符和输入码（1,2,3,4 除外,会自动转换成光标移动功能,例 KEY=1）\nKEY=F31\n按下后执行 F31（logo 菜单）",type:"key" },
             {
                 key: "ANCHOR_TYPE", title: "锚点类型", tip: "1～9 分别代表 CAND 矩阵内的 9 个点,以这些点为原点.\nANCHOR_TYPE=5\n以 CAND 正中心为原点(0,0),之所以附加这么多的锚点类型是为了 ICON 的精确定位", type: "select", select: [
                     { name: "1 左上角", value: "1" },

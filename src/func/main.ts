@@ -50,10 +50,13 @@ class JMain {
         /** 多选自加 */
         multiAdd: <string>"1,1,1,1",
         /** 选中高亮key颜色 */
-        selecthlKeyColor: "#00ff00"
+        selecthlKeyColor: "#00ff00",
+        /** 候选框名,这个不能更改,只能由其他数据决定 */
+        candName: <string>null,
+        /** 冒泡名,这个不能更改,只能由其他数据决定 */
+        hintName: <string>null
     }
-    /** 候选框名 */
-    candName: string = null
+
     /** 样式数据 */
     cssData: any
     /** 键盘数据 */
@@ -62,6 +65,8 @@ class JMain {
     genData: any
     /** 候选框数据 */
     candData: any
+    /** 冒泡数据 */
+    hintData: any
     /** 图片数据 */
     imageData: {
         [propName: string]: JImgData
@@ -87,7 +92,12 @@ class JMain {
 
     /** 候选框路径 */
     get candUrl() {
-        return `${this.op.dirBase}/${this.op.boardDir}/${this.candName}.cnd`
+        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.candName}.cnd`
+    }
+
+    /** 冒泡路径 */
+    get hintUrl() {
+        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.hintName}.pop`
     }
 
     constructor() {

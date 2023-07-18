@@ -32,6 +32,17 @@ class JOPDiv {
                 }
             },
             {
+                name: "强制保存", func: () => {
+                    this.saveOPJson()
+                    saveJson(this.cssUrl, this.cssData)
+                    saveJson(this.genUrl, this.genData)
+                    saveJson(this.candUrl, this.candData)
+                    saveJson(this.hintUrl, this.hintData)
+                    saveJson(this.boardUrl, this.boardData)
+                    console.log("保存成功")
+                }
+            },
+            {
                 name: "清空缓存", func: () => {
                     localStorage.clear()
                 }
@@ -125,11 +136,13 @@ class JOPDiv {
         this.createChildFileDiv({ title: "键盘文件夹:", value: this.op.boardDir, inputFunc: (s) => { this.op.boardDir = s } })
         this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s }, downloadData: this.cssData })
         this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s }, downloadData: this.boardData })
-        this.createChildFileDiv({ title: "资料名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s }, downloadData: this.genData })
+        this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s }, downloadData: this.genData })
+        this.createChildFileDiv({ title: "候选框名:", value: this.op.candName, isOnlyRead: true, downloadData: this.candData, exName: ".cnd" })
+        this.createChildFileDiv({ title: "冒泡名:", value: this.op.hintName, isOnlyRead: true, downloadData: this.hintData, exName: ".ini" })
     }
 
     /** 创建单个文件div */
-    createChildFileDiv(this: JMain, op: { title: string, value: string, inputFunc: (s: string) => void, downloadData?: any }) {
+    createChildFileDiv(this: JMain, op: { title: string, value: string, inputFunc?: (s: string) => void, downloadData?: any, isOnlyRead?: boolean, exName?: string }) {
         let div = document.createElement("div")
         div.setAttribute("class", "phoneChildFile")
         let p = document.createElement("label")
@@ -139,27 +152,32 @@ class JOPDiv {
         let isChange = false
         input.addEventListener("change", (e) => {
             isChange = true
-
         })
-        let loadBtn = document.createElement("button")
-        loadBtn.innerHTML = "加载"
-        loadBtn.onclick = () => {
-            if (!isChange) {
-                alert("没有任何修改,不用加载")
-                return
+
+        div.append(p, input)
+        if (!op.isOnlyRead) {
+            let loadBtn = document.createElement("button")
+            loadBtn.innerHTML = "加载"
+            loadBtn.onclick = () => {
+                if (!isChange) {
+                    alert("没有任何修改,不用加载")
+                    return
+                }
+                op.inputFunc(input.value)
+                this.saveOPJson()
+                new JMain()
             }
-            op.inputFunc(input.value)
-            this.saveOPJson()
-            new JMain()
+            div.append(loadBtn)
+        } else {
+            input.disabled = true
         }
-        div.append(p, input, loadBtn)
         if (op.downloadData) {
             let downloadBtn = document.createElement("button")
             downloadBtn.innerHTML = "下载"
             downloadBtn.onclick = () => {
                 console.log("下载")
                 let str = jsonToIni(op.downloadData)
-                saveStrFile(str, op.value)
+                saveStrFile(str, op.value + `${op?.exName || ""}`)
             }
             div.append(downloadBtn)
             let readBtn = document.createElement("button")

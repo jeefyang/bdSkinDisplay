@@ -64,13 +64,21 @@ class JFlow {
                 this.boardData[key][childKey] = this.genData[key][childKey]
             }
         });
-        this.candName = this.boardData?.['CAND']?.['LAYOUT_NAME']
-        if (this.candName) {
+        this.op.candName = this.boardData?.['CAND']?.['LAYOUT_NAME']
+        if (this.op.candName) {
             this.candData = loadJson(this.candUrl)
             if (!this.candData) {
                 this.candData = await getIniFileData(this.candUrl)
             }
             console.log(this.candData)
+        }
+        this.op.hintName = this.boardData?.['HINT']?.["LAYOUT_NAME"]
+        if (this.op.hintName) {
+            this.hintData = loadJson(this.hintData)
+            if (!this.hintData) {
+                this.hintData = await getIniFileData(this.hintUrl)
+            }
+            console.log(this.hintData)
         }
         console.log(this.boardData)
         return

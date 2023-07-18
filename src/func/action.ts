@@ -259,4 +259,17 @@ class JAction {
         }
     }
 
+    getNewNum(this: JMain, prevKey: string, baseData: any, count: number = 1) {
+        let name = prevKey + count
+        while (baseData[name]) {
+            count++
+            name = prevKey + count
+        }
+        return name
+    }
+
+    createNewBoardKey(this: JMain) {
+
+    }
+
 }
