@@ -73,7 +73,7 @@ class JAction {
         return this.imageData[name]
     }
 
-    async getImgEle(this: JMain, op: { til: TilImgType, imgData: JImgData, w?: number, h?: number }): Promise<{ e: HTMLImageElement | HTMLDivElement, offsetX: number, offsetY: number }> {
+    async getImgEle(this: JMain, op: { til: TilImgType, imgData: JImgData, w?: number, h?: number, isBack?: boolean }): Promise<{ e: HTMLImageElement | HTMLDivElement, offsetX: number, offsetY: number }> {
         let SOURCE_RECT = op.til.SOURCE_RECT.split(",").map(c => Number(c))
         let sRectX = SOURCE_RECT[0]
         let sRectY = SOURCE_RECT[1]
@@ -81,7 +81,11 @@ class JAction {
         let sRectH = SOURCE_RECT[3]
         op.w = op.w || sRectW
         op.h = op.h || sRectH
-        if (!op.til.INNER_RECT) {
+        let INNER_RECT_STR = op.til.INNER_RECT
+        if (op.isBack && !INNER_RECT_STR) {
+            INNER_RECT_STR = op.til.SOURCE_RECT
+        }
+        if (!INNER_RECT_STR) {
             let b64 = await getTilImageB64(op.imgData.b64, sRectX, sRectY, sRectW, sRectH)
             let img = document.createElement("img")
             img.src = b64
@@ -91,7 +95,7 @@ class JAction {
                 e: img, offsetX: (op.w - sRectW) / 2, offsetY: (op.h - sRectH) / 2
             }
         }
-        let INNER_RECT = op.til.INNER_RECT.split(",").map(c => Number(c))
+        let INNER_RECT = INNER_RECT_STR.split(",").map(c => Number(c))
         let iRectX = INNER_RECT[0]
         let iRectY = INNER_RECT[1]
         let iRectW = INNER_RECT[2]

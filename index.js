@@ -75,7 +75,11 @@ class JAction {
         let sRectH = SOURCE_RECT[3];
         op.w = op.w || sRectW;
         op.h = op.h || sRectH;
-        if (!op.til.INNER_RECT) {
+        let INNER_RECT_STR = op.til.INNER_RECT;
+        if (op.isBack && !INNER_RECT_STR) {
+            INNER_RECT_STR = op.til.SOURCE_RECT;
+        }
+        if (!INNER_RECT_STR) {
             let b64 = await getTilImageB64(op.imgData.b64, sRectX, sRectY, sRectW, sRectH);
             let img = document.createElement("img");
             img.src = b64;
@@ -85,7 +89,7 @@ class JAction {
                 e: img, offsetX: (op.w - sRectW) / 2, offsetY: (op.h - sRectH) / 2
             };
         }
-        let INNER_RECT = op.til.INNER_RECT.split(",").map(c => Number(c));
+        let INNER_RECT = INNER_RECT_STR.split(",").map(c => Number(c));
         let iRectX = INNER_RECT[0];
         let iRectY = INNER_RECT[1];
         let iRectW = INNER_RECT[2];
@@ -882,7 +886,7 @@ class JFlow {
             if (!tag) {
                 continue;
             }
-            await this.decodeBoard_ImgStyle({ viewW: size[0], viewH: size[1], w: size[0], h: size[1], style: tag, div, keyName });
+            await this.decodeBoard_ImgStyle({ viewRectW: size[0], viewRectH: size[1], w: size[0], h: size[1], style: tag, div, keyName });
         }
         return;
     }
@@ -936,6 +940,7 @@ class JFlow {
                 let b64 = await getTilImageB64(imageData.b64, rectX, rectY, rectW, rectH);
                 let img = document.createElement("img");
                 img.setAttribute("calss", i == 0 ? `nm_img ${op.keyName} ${styleName}` : `hl_img ${op.keyName} ${styleName}`);
+                img.setAttribute("memo", imgTagList[i]);
                 img.src = b64;
                 img.style.position = "absolute";
                 let w = rectW;
@@ -1013,12 +1018,12 @@ class JFlow {
         let handlerDiv = document.createElement("div");
         let cand = this.candData["CAND"];
         if (cand.BACK_STYLE) {
-            await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, div, w: rectW, h: rectH, style: cand.BACK_STYLE, handlerDiv, keyName });
+            await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, w: rectW, h: rectH, style: cand.BACK_STYLE, handlerDiv, keyName, isBack: true });
         }
         if (cand.FORE_STYLE) {
             let list = cand.FORE_STYLE.split(',');
             for (let i = 0; i < list.length; i++) {
-                await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, div, style: list[i], handlerDiv, keyName });
+                await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, style: list[i], handlerDiv, keyName });
             }
         }
         for (let key in this.candData) {
@@ -1061,8 +1066,8 @@ class JFlow {
             div.style.position = "absolute";
             div.style.left = startX + 'px';
             div.style.top = startY + 'px';
-            div.style.width = size[0] + 'px';
-            div.style.height = size[1] + 'px';
+            div.style.width = (size[0] - padding[0] - padding[2]) + 'px';
+            div.style.height = (size[1] - padding[1] - padding[3]) + 'px';
             this.phoneBoardDiv.append(div);
             let handlerDiv = document.createElement("div");
             let styleName = `STYLE${data.CELL_STYLE}`;
@@ -1142,9 +1147,21 @@ class JFlow {
             }
         }
         let imgList = [];
-        let imgTagList = [css.NM_IMG, css.HL_IMG];
+        let imgTagList = [css.NM_IMG || css.HL_IMG, css.HL_IMG];
         for (let i = 0; i < imgTagList.length; i++) {
             if (!imgTagList[i]) {
+                if (i == 0) {
+                    let div = document.createElement("div");
+                    div.setAttribute("calss", i == 0 ? `nm_img ${styleName} ${op.keyName}` : `hl_img ${styleName} ${op.keyName}`);
+                    div.style.position = "absolute";
+                    div.style.left = "0px";
+                    div.style.top = "0px";
+                    div.style.width = op.viewRectW + "px";
+                    div.style.height = op.viewRectH + "px";
+                    op.div.append(div);
+                    imgList.push(div);
+                    continue;
+                }
                 imgList.push(undefined);
                 continue;
             }
@@ -1152,14 +1169,15 @@ class JFlow {
             let imageData = await this.getImageData(nm[0]);
             let imgName = `IMG${nm[1]}`;
             let imgTil = imageData.til[imgName];
-            let edata = await this.getImgEle({ til: imgTil, imgData: imageData, w: op.viewW, h: op.viewH });
+            let edata = await this.getImgEle({ til: imgTil, imgData: imageData, w: op.viewRectW, h: op.viewRectH, isBack: op.isBack });
             edata.e.setAttribute("calss", i == 0 ? `nm_img ${styleName} ${op.keyName}` : `hl_img ${styleName} ${op.keyName}`);
+            edata.e.setAttribute("memo", imgTagList[i]);
             edata.e.style.position = "absolute";
             let offsetX = edata.offsetX;
             let offsetY = edata.offsetY;
             if (op.size) {
-                offsetX += (op.viewW - op.size[0]) / 2;
-                offsetY += (op.viewH - op.size[1]) / 2;
+                offsetX += (op.viewRectW - op.size[0]) / 2;
+                offsetY += (op.viewRectH - op.size[1]) / 2;
             }
             if (pos) {
                 offsetX += pos[0];
@@ -1171,21 +1189,21 @@ class JFlow {
             imgList.push(edata.e);
         }
         op.handlerDiv && op.handlerDiv.addEventListener('mouseenter', () => {
-            imgList[0] && (imgList[0].style.display = "none");
+            imgList[0] && imgList[1] && (imgList[0].style.display = "none");
             imgList[1] && (imgList[1].style.display = "block");
         });
         op.handlerDiv && op.handlerDiv.addEventListener("mouseleave", () => {
             imgList[0] && (imgList[0].style.display = "block");
             imgList[1] && (imgList[1].style.display = "none");
         });
-        let colorList = [css.NM_COLOR, css.HL_COLOR];
+        let colorList = [css.NM_COLOR || css.HL_COLOR, css.HL_COLOR];
         let boxList = [];
         for (let i = 0; i < colorList.length; i++) {
             if (!colorList[i] || !css.SHOW) {
                 boxList.push(undefined);
                 continue;
             }
-            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, viewW: op.viewW, viewH: op.viewH });
+            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, viewW: op.viewRectW, viewH: op.viewRectH });
             op.div.append(p);
             boxList.push(p);
         }
@@ -1218,13 +1236,13 @@ class JFlow {
         div.style.textAlign = "center";
         let handlerDiv = document.createElement("div");
         if (data.BACK_STYLE) {
-            await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, w: rectW, h: rectH, div, style: data.BACK_STYLE, handlerDiv, keyName });
+            await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, w: rectW, h: rectH, div, style: data.BACK_STYLE, handlerDiv, keyName, isBack: true });
         }
         if (data.FORE_STYLE) {
             let pos = (data.POS_TYPE || "").split(",");
             let list = data.FORE_STYLE.split(',');
             for (let i = 0; i < list.length; i++) {
-                await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, div, style: list[i], pos_Type: pos[i], handlerDiv, keyName });
+                await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, style: list[i], pos_Type: pos[i], handlerDiv, keyName });
             }
         }
         // div.style.background = "red"
@@ -1279,6 +1297,8 @@ class JMain {
             dirBase: "./public",
             /** 资源文件夹 */
             resDir: "res",
+            /** 样式文件夹 */
+            cssDir: "res",
             /** 样式表名 */
             cssName: "default.css",
             /** 键盘文件夹 */
@@ -1313,7 +1333,7 @@ class JMain {
     }
     /** 样式路径 */
     get cssUrl() {
-        return `${this.op.dirBase}/${this.op.resDir}/${this.op.cssName}`;
+        return `${this.op.dirBase}/${this.op.cssDir}/${this.op.cssName}`;
     }
     /** 键盘路径 */
     get boardUrl() {
@@ -1337,6 +1357,7 @@ class JOPDiv {
     createOPDiv() {
         this.createScaleDiv();
         this.createSelectHLKeyDiv();
+        this.createCandSelectDiv();
         let btnDiv = document.createElement("button");
         btnDiv.setAttribute("class", "btnDiv");
         let btnList = [
@@ -1395,6 +1416,22 @@ class JOPDiv {
             btn.setAttribute("class", "opBtn");
         }
         this.phoneOPDiv.append(btnDiv);
+    }
+    /** 创建候选框选择div */
+    createCandSelectDiv() {
+        let div = document.createElement("div");
+        let p = document.createElement("label");
+        p.innerHTML = "候选框切换:";
+        let input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = this.op.isPersist;
+        input.addEventListener("change", () => {
+            this.op.isPersist = input.checked;
+            this.saveOPJson();
+            new JMain();
+        });
+        div.append(p, input);
+        this.phoneOPDiv.append(div);
     }
     /** 创建多选高亮色的div */
     createSelectHLKeyDiv() {
@@ -1464,6 +1501,7 @@ class JOPDiv {
         this.createChildFileDiv({ title: "基础文件夹:", value: this.op.dirBase, inputFunc: (s) => { this.op.dirBase = s; } });
         this.createChildFileDiv({ title: "资源文件夹:", value: this.op.resDir, inputFunc: (s) => { this.op.resDir = s; } });
         this.createChildFileDiv({ title: "键盘文件夹:", value: this.op.boardDir, inputFunc: (s) => { this.op.boardDir = s; } });
+        this.createChildFileDiv({ title: "样式文件夹:", value: this.op.cssDir, inputFunc: (s) => { this.op.cssDir = s; } });
         this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s; }, downloadData: this.cssData });
         this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s; }, downloadData: this.boardData });
         this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s; }, downloadData: this.genData });

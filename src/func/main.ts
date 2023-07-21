@@ -30,6 +30,8 @@ class JMain {
         dirBase: "./public",
         /** 资源文件夹 */
         resDir: "res",
+        /** 样式文件夹 */
+        cssDir: "res",
         /** 样式表名 */
         cssName: "default.css",
         /** 键盘文件夹 */
@@ -77,7 +79,7 @@ class JMain {
 
     /** 样式路径 */
     get cssUrl() {
-        return `${this.op.dirBase}/${this.op.resDir}/${this.op.cssName}`
+        return `${this.op.dirBase}/${this.op.cssDir}/${this.op.cssName}`
     }
 
     /** 键盘路径 */

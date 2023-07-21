@@ -4,6 +4,7 @@ class JOPDiv {
     createOPDiv(this: JMain) {
         this.createScaleDiv()
         this.createSelectHLKeyDiv()
+        this.createCandSelectDiv()
         let btnDiv = document.createElement("button")
         btnDiv.setAttribute("class", "btnDiv")
         let btnList: { name: string, func: () => void }[] = [
@@ -62,6 +63,23 @@ class JOPDiv {
             btn.setAttribute("class", "opBtn")
         }
         this.phoneOPDiv.append(btnDiv)
+    }
+
+    /** 创建候选框选择div */
+    createCandSelectDiv(this: JMain) {
+        let div = document.createElement("div")
+        let p = document.createElement("label")
+        p.innerHTML = "候选框切换:"
+        let input = document.createElement("input")
+        input.type = "checkbox"
+        input.checked = this.op.isPersist
+        input.addEventListener("change", () => {
+            this.op.isPersist = input.checked
+            this.saveOPJson()
+            new JMain()
+        })
+        div.append(p, input)
+        this.phoneOPDiv.append(div)
     }
 
     /** 创建多选高亮色的div */
@@ -134,6 +152,7 @@ class JOPDiv {
         this.createChildFileDiv({ title: "基础文件夹:", value: this.op.dirBase, inputFunc: (s) => { this.op.dirBase = s } })
         this.createChildFileDiv({ title: "资源文件夹:", value: this.op.resDir, inputFunc: (s) => { this.op.resDir = s } })
         this.createChildFileDiv({ title: "键盘文件夹:", value: this.op.boardDir, inputFunc: (s) => { this.op.boardDir = s } })
+        this.createChildFileDiv({ title: "样式文件夹:", value: this.op.cssDir, inputFunc: (s) => { this.op.cssDir = s } })
         this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s }, downloadData: this.cssData })
         this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s }, downloadData: this.boardData })
         this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s }, downloadData: this.genData })

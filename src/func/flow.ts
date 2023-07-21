@@ -128,7 +128,7 @@ class JFlow {
             if (!tag) {
                 continue
             }
-            await this.decodeBoard_ImgStyle({ viewW: size[0], viewH: size[1], w: size[0], h: size[1], style: tag, div, keyName })
+            await this.decodeBoard_ImgStyle({ viewRectW: size[0], viewRectH: size[1], w: size[0], h: size[1], style: tag, div, keyName })
         }
         return
     }
@@ -185,6 +185,7 @@ class JFlow {
                 let b64 = await getTilImageB64(imageData.b64, rectX, rectY, rectW, rectH)
                 let img = document.createElement("img")
                 img.setAttribute("calss", i == 0 ? `nm_img ${op.keyName} ${styleName}` : `hl_img ${op.keyName} ${styleName}`)
+                img.setAttribute("memo", imgTagList[i])
                 img.src = b64
                 img.style.position = "absolute"
                 let w = rectW
@@ -266,12 +267,12 @@ class JFlow {
         let handlerDiv = document.createElement("div")
         let cand: CndCandType = this.candData["CAND"]
         if (cand.BACK_STYLE) {
-            await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, div, w: rectW, h: rectH, style: cand.BACK_STYLE, handlerDiv, keyName })
+            await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, w: rectW, h: rectH, style: cand.BACK_STYLE, handlerDiv, keyName, isBack: true })
         }
         if (cand.FORE_STYLE) {
             let list = cand.FORE_STYLE.split(',')
             for (let i = 0; i < list.length; i++) {
-                await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, div, style: list[i], handlerDiv, keyName })
+                await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, style: list[i], handlerDiv, keyName })
             }
         }
         for (let key in this.candData) {
@@ -316,8 +317,8 @@ class JFlow {
             div.style.position = "absolute"
             div.style.left = startX + 'px'
             div.style.top = startY + 'px'
-            div.style.width = size[0] + 'px'
-            div.style.height = size[1] + 'px'
+            div.style.width = (size[0] - padding[0] - padding[2]) + 'px'
+            div.style.height = (size[1] - padding[1] - padding[3]) + 'px'
             this.phoneBoardDiv.append(div)
             let handlerDiv = document.createElement("div")
             let styleName = `STYLE${data.CELL_STYLE}`
@@ -386,10 +387,10 @@ class JFlow {
 
     /** 解析键值key的样式 */
     async decodeBoard_ImgStyle(this: JMain, op: {
-        viewW: number, viewH: number,
+        viewRectW: number, viewRectH: number,
         w?: number, h?: number, style: string, div: HTMLElement,
         pos_Type?: string, handlerDiv?: HTMLDivElement, keyName: string,
-        size?: number[]
+        size?: number[], isBack?: boolean
     }) {
         let styleName = `STYLE${op.style}`
         let css: CssStyleType = this.cssData[styleName]
@@ -404,9 +405,21 @@ class JFlow {
             }
         }
         let imgList: HTMLElement[] = []
-        let imgTagList: string[] = [css.NM_IMG, css.HL_IMG]
+        let imgTagList: string[] = [css.NM_IMG || css.HL_IMG, css.HL_IMG]
         for (let i = 0; i < imgTagList.length; i++) {
             if (!imgTagList[i]) {
+                if (i == 0) {
+                    let div = document.createElement("div")
+                    div.setAttribute("calss", i == 0 ? `nm_img ${styleName} ${op.keyName}` : `hl_img ${styleName} ${op.keyName}`)
+                    div.style.position = "absolute"
+                    div.style.left = "0px"
+                    div.style.top = "0px"
+                    div.style.width = op.viewRectW + "px"
+                    div.style.height = op.viewRectH + "px"
+                    op.div.append(div)
+                    imgList.push(div)
+                    continue
+                }
                 imgList.push(undefined)
                 continue
             }
@@ -414,14 +427,15 @@ class JFlow {
             let imageData = await this.getImageData(nm[0])
             let imgName = `IMG${nm[1]}`
             let imgTil: TilImgType = imageData.til[imgName]
-            let edata = await this.getImgEle({ til: imgTil, imgData: imageData, w: op.viewW, h: op.viewH })
+            let edata = await this.getImgEle({ til: imgTil, imgData: imageData, w: op.viewRectW, h: op.viewRectH, isBack: op.isBack })
             edata.e.setAttribute("calss", i == 0 ? `nm_img ${styleName} ${op.keyName}` : `hl_img ${styleName} ${op.keyName}`)
+            edata.e.setAttribute("memo", imgTagList[i])
             edata.e.style.position = "absolute"
             let offsetX = edata.offsetX
             let offsetY = edata.offsetY
             if (op.size) {
-                offsetX += (op.viewW - op.size[0]) / 2
-                offsetY += (op.viewH - op.size[1]) / 2
+                offsetX += (op.viewRectW - op.size[0]) / 2
+                offsetY += (op.viewRectH - op.size[1]) / 2
             }
             if (pos) {
                 offsetX += pos[0]
@@ -433,7 +447,7 @@ class JFlow {
             imgList.push(edata.e)
         }
         op.handlerDiv && op.handlerDiv.addEventListener('mouseenter', () => {
-            imgList[0] && (imgList[0].style.display = "none")
+            imgList[0] && imgList[1] && (imgList[0].style.display = "none")
             imgList[1] && (imgList[1].style.display = "block")
         })
         op.handlerDiv && op.handlerDiv.addEventListener("mouseleave", () => {
@@ -441,14 +455,14 @@ class JFlow {
             imgList[1] && (imgList[1].style.display = "none")
         })
 
-        let colorList = [css.NM_COLOR, css.HL_COLOR]
+        let colorList = [css.NM_COLOR || css.HL_COLOR, css.HL_COLOR]
         let boxList: HTMLElement[] = []
         for (let i = 0; i < colorList.length; i++) {
             if (!colorList[i] || !css.SHOW) {
                 boxList.push(undefined)
                 continue
             }
-            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, viewW: op.viewW, viewH: op.viewH })
+            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, viewW: op.viewRectW, viewH: op.viewRectH })
             op.div.append(p)
             boxList.push(p)
         }
@@ -483,13 +497,13 @@ class JFlow {
         let handlerDiv = document.createElement("div")
 
         if (data.BACK_STYLE) {
-            await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, w: rectW, h: rectH, div, style: data.BACK_STYLE, handlerDiv, keyName })
+            await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, w: rectW, h: rectH, div, style: data.BACK_STYLE, handlerDiv, keyName, isBack: true })
         }
         if (data.FORE_STYLE) {
             let pos = (data.POS_TYPE || "").split(",")
             let list = data.FORE_STYLE.split(',')
             for (let i = 0; i < list.length; i++) {
-                await this.decodeBoard_ImgStyle({ viewW: rectW, viewH: rectH, div, style: list[i], pos_Type: pos[i], handlerDiv, keyName })
+                await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, style: list[i], pos_Type: pos[i], handlerDiv, keyName })
             }
 
         }

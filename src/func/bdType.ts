@@ -588,6 +588,8 @@ type CssStyleType = {
      * @example HL_IMG=fore1,4
      */
     HL_IMG?: string
+    /** 按压动画 */
+    PRESS_ANIM?: string
 }
 
 /** 整体定义 */

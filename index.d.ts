@@ -11,6 +11,7 @@ declare class JAction {
         imgData: JImgData;
         w?: number;
         h?: number;
+        isBack?: boolean;
     }): Promise<{
         e: HTMLImageElement | HTMLDivElement;
         offsetX: number;
@@ -603,6 +604,8 @@ declare type CssStyleType = {
      * @example HL_IMG=fore1,4
      */
     HL_IMG?: string;
+    /** 按压动画 */
+    PRESS_ANIM?: string;
 };
 /** 整体定义 */
 declare type TilGlobalType = {
@@ -688,8 +691,8 @@ declare class JFlow {
     decodeBoard_List(this: JMain, data: BoardListType, keyName: string): Promise<void>;
     /** 解析键值key的样式 */
     decodeBoard_ImgStyle(this: JMain, op: {
-        viewW: number;
-        viewH: number;
+        viewRectW: number;
+        viewRectH: number;
         w?: number;
         h?: number;
         style: string;
@@ -698,6 +701,7 @@ declare class JFlow {
         handlerDiv?: HTMLDivElement;
         keyName: string;
         size?: number[];
+        isBack?: boolean;
     }): Promise<void>;
     /** 解析键盘key */
     decodeBoard_Key(this: JMain, data: BoardKeyType, keyName: string): Promise<void>;
@@ -734,6 +738,8 @@ declare class JMain {
         dirBase: string;
         /** 资源文件夹 */
         resDir: string;
+        /** 样式文件夹 */
+        cssDir: string;
         /** 样式表名 */
         cssName: string;
         /** 键盘文件夹 */
@@ -798,6 +804,8 @@ declare class JMain {
 declare class JOPDiv {
     /** 创建配置div */
     createOPDiv(this: JMain): void;
+    /** 创建候选框选择div */
+    createCandSelectDiv(this: JMain): void;
     /** 创建多选高亮色的div */
     createSelectHLKeyDiv(this: JMain): void;
     /** 创建缩放div */
