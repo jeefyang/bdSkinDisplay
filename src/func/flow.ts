@@ -165,11 +165,23 @@ class JFlow {
             if (!css) {
                 continue
             }
-            let imgList: HTMLImageElement[] = []
+            let imgList: HTMLElement[] = []
             let imgTagList: string[] = [css.NM_IMG, css.HL_IMG]
-
             for (let i = 0; i < imgTagList.length; i++) {
                 if (!imgTagList[i]) {
+                    if (i == 0) {
+                        let div = document.createElement("div")
+                        div.setAttribute("calss", i == 0 ? `nm_img ${styleName} ${op.keyName}` : `hl_img ${styleName} ${op.keyName}`)
+                        div.style.position = "absolute"
+                        div.style.left = "0px"
+                        div.style.top = "0px"
+                        console.log(op.rectH, op.rectW)
+                        div.style.width = op.rectW + "px"
+                        div.style.height = op.rectH + "px"
+                        op.div.append(div)
+                        imgList.push(div)
+                        continue
+                    }
                     imgList.push(undefined)
                     continue
                 }
@@ -214,9 +226,6 @@ class JFlow {
                 maxY = Math.max(offsetY + h, maxY)
                 op.div.append(img)
                 imgList.push(img)
-                img.addEventListener("click", () => {
-                    console.log(`${op.keyName} ${styleName}`)
-                })
             }
             op.handlerDiv.addEventListener('mouseenter', () => {
                 imgList[0] && (imgList[0].style.display = "none")
@@ -267,7 +276,7 @@ class JFlow {
         let handlerDiv = document.createElement("div")
         let cand: CndCandType = this.candData["CAND"]
         if (cand.BACK_STYLE) {
-            await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, w: rectW, h: rectH, style: cand.BACK_STYLE, handlerDiv, keyName, isBack: true })
+            await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, w: rectW, h: rectH, style: cand.BACK_STYLE, handlerDiv, keyName, isBack: true, isCand: true })
         }
         if (cand.FORE_STYLE) {
             let list = cand.FORE_STYLE.split(',')
@@ -390,7 +399,7 @@ class JFlow {
         viewRectW: number, viewRectH: number,
         w?: number, h?: number, style: string, div: HTMLElement,
         pos_Type?: string, handlerDiv?: HTMLDivElement, keyName: string,
-        size?: number[], isBack?: boolean
+        size?: number[], isBack?: boolean, isCand?: boolean
     }) {
         let styleName = `STYLE${op.style}`
         let css: CssStyleType = this.cssData[styleName]
@@ -405,7 +414,11 @@ class JFlow {
             }
         }
         let imgList: HTMLElement[] = []
-        let imgTagList: string[] = [css.NM_IMG || css.HL_IMG, css.HL_IMG]
+        let imgTagList: string[] = [css.NM_IMG, css.HL_IMG]
+        if (op.isCand && !imgTagList[0]) {
+            console.log(css.HL_IMG)
+            imgTagList[0] = css.HL_IMG
+        }
         for (let i = 0; i < imgTagList.length; i++) {
             if (!imgTagList[i]) {
                 if (i == 0) {

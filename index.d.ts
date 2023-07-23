@@ -702,6 +702,7 @@ declare class JFlow {
         keyName: string;
         size?: number[];
         isBack?: boolean;
+        isCand?: boolean;
     }): Promise<void>;
     /** 解析键盘key */
     decodeBoard_Key(this: JMain, data: BoardKeyType, keyName: string): Promise<void>;
