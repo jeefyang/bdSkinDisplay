@@ -153,15 +153,19 @@ class JOPDiv {
         this.createChildFileDiv({ title: "资源文件夹:", value: this.op.resDir, inputFunc: (s) => { this.op.resDir = s } })
         this.createChildFileDiv({ title: "键盘文件夹:", value: this.op.boardDir, inputFunc: (s) => { this.op.boardDir = s } })
         this.createChildFileDiv({ title: "样式文件夹:", value: this.op.cssDir, inputFunc: (s) => { this.op.cssDir = s } })
-        this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s }, downloadData: this.cssData })
-        this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s }, downloadData: this.boardData })
-        this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s }, downloadData: this.genData })
-        this.createChildFileDiv({ title: "候选框名:", value: this.op.candName, isOnlyRead: true, downloadData: this.candData, exName: ".cnd" })
-        this.createChildFileDiv({ title: "冒泡名:", value: this.op.hintName, isOnlyRead: true, downloadData: this.hintData, exName: ".ini" })
+        this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s }, downloadData: () => { return this.cssData } })
+        this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s }, downloadData: () => { return this.boardData } })
+        this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s }, downloadData: () => { return this.genData } })
+        this.createChildFileDiv({ title: "候选框名:", value: this.op.candName, isOnlyRead: true, downloadData: () => { return this.candData }, exName: ".cnd" })
+        this.createChildFileDiv({
+            title: "冒泡名:", value: this.op.hintName, isOnlyRead: true, downloadData: () => {
+                return this.hintData
+            }, exName: ".ini"
+        })
     }
 
     /** 创建单个文件div */
-    createChildFileDiv(this: JMain, op: { title: string, value: string, inputFunc?: (s: string) => void, downloadData?: any, isOnlyRead?: boolean, exName?: string }) {
+    createChildFileDiv(this: JMain, op: { title: string, value: string, inputFunc?: (s: string) => void, downloadData?: () => any, isOnlyRead?: boolean, exName?: string }) {
         let div = document.createElement("div")
         div.setAttribute("class", "phoneChildFile")
         let p = document.createElement("label")
@@ -195,14 +199,14 @@ class JOPDiv {
             downloadBtn.innerHTML = "下载"
             downloadBtn.onclick = () => {
                 console.log("下载")
-                let str = jsonToIni(op.downloadData)
+                let str = jsonToIni(op.downloadData())
                 saveStrFile(str, op.value + `${op?.exName || ""}`)
             }
             div.append(downloadBtn)
             let readBtn = document.createElement("button")
             readBtn.innerHTML = "查看"
             readBtn.onclick = () => {
-                let str = jsonToIni(op.downloadData)
+                let str = jsonToIni(op.downloadData())
                 console.log(str)
             }
             div.append(readBtn)

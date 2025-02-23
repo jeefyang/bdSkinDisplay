@@ -1,8 +1,9 @@
 type childDomType<K extends string = string> = {
-    key: K
-    type?: "normal" | "select" | "style" | "color" | "offset" | "key"
+    key?: K
+    type?: "normal" | "select" | "style" | "color" | "offset" | "key" | "fn"
     title: string
     tip?: string
+    fn?: (v: string) => void
     select?: { name: string, value: string }[]
 }
 
@@ -95,6 +96,16 @@ function createChildDom<K extends string = string>(this: JMain, op: {
             this.reFreshPhoneSkin()
         })
         div.append(select)
+    }
+    else if (op.data.type == "fn") {
+        let input = document.createElement("input")
+        div.append(input)
+        let button = document.createElement("button")
+        button.innerHTML = "执行"
+        button.onclick = () => {
+            op.data.fn(input.value)
+        }
+        div.append(input, button)
     }
     else {
         let input = document.createElement("input")

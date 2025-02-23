@@ -583,6 +583,16 @@ function createChildDom(op) {
         });
         div.append(select);
     }
+    else if (op.data.type == "fn") {
+        let input = document.createElement("input");
+        div.append(input);
+        let button = document.createElement("button");
+        button.innerHTML = "执行";
+        button.onclick = () => {
+            op.data.fn(input.value);
+        };
+        div.append(input, button);
+    }
     else {
         let input = document.createElement("input");
         let colorInput;
@@ -1296,6 +1306,26 @@ class JFlow {
     }
 }
 class JMain {
+    /** 样式路径 */
+    get cssUrl() {
+        return `${this.op.dirBase}/${this.op.cssDir}/${this.op.cssName}`;
+    }
+    /** 键盘路径 */
+    get boardUrl() {
+        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.boardName}`;
+    }
+    /** 资料路径 */
+    get genUrl() {
+        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.genName}`;
+    }
+    /** 候选框路径 */
+    get candUrl() {
+        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.candName}.cnd`;
+    }
+    /** 冒泡路径 */
+    get hintUrl() {
+        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.hintName}.pop`;
+    }
     constructor() {
         /** 手机配置key,用于保存 */
         this.phoneOPKey = "phoneOP";
@@ -1344,26 +1374,6 @@ class JMain {
         /** 键盘元素集合 */
         this.keyDomList = {};
         this.init();
-    }
-    /** 样式路径 */
-    get cssUrl() {
-        return `${this.op.dirBase}/${this.op.cssDir}/${this.op.cssName}`;
-    }
-    /** 键盘路径 */
-    get boardUrl() {
-        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.boardName}`;
-    }
-    /** 资料路径 */
-    get genUrl() {
-        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.genName}`;
-    }
-    /** 候选框路径 */
-    get candUrl() {
-        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.candName}.cnd`;
-    }
-    /** 冒泡路径 */
-    get hintUrl() {
-        return `${this.op.dirBase}/${this.op.boardDir}/${this.op.hintName}.pop`;
     }
 }
 class JOPDiv {
@@ -1516,11 +1526,15 @@ class JOPDiv {
         this.createChildFileDiv({ title: "资源文件夹:", value: this.op.resDir, inputFunc: (s) => { this.op.resDir = s; } });
         this.createChildFileDiv({ title: "键盘文件夹:", value: this.op.boardDir, inputFunc: (s) => { this.op.boardDir = s; } });
         this.createChildFileDiv({ title: "样式文件夹:", value: this.op.cssDir, inputFunc: (s) => { this.op.cssDir = s; } });
-        this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s; }, downloadData: this.cssData });
-        this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s; }, downloadData: this.boardData });
-        this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s; }, downloadData: this.genData });
-        this.createChildFileDiv({ title: "候选框名:", value: this.op.candName, isOnlyRead: true, downloadData: this.candData, exName: ".cnd" });
-        this.createChildFileDiv({ title: "冒泡名:", value: this.op.hintName, isOnlyRead: true, downloadData: this.hintData, exName: ".ini" });
+        this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s; }, downloadData: () => { return this.cssData; } });
+        this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s; }, downloadData: () => { return this.boardData; } });
+        this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s; }, downloadData: () => { return this.genData; } });
+        this.createChildFileDiv({ title: "候选框名:", value: this.op.candName, isOnlyRead: true, downloadData: () => { return this.candData; }, exName: ".cnd" });
+        this.createChildFileDiv({
+            title: "冒泡名:", value: this.op.hintName, isOnlyRead: true, downloadData: () => {
+                return this.hintData;
+            }, exName: ".ini"
+        });
     }
     /** 创建单个文件div */
     createChildFileDiv(op) {
@@ -1557,14 +1571,14 @@ class JOPDiv {
             downloadBtn.innerHTML = "下载";
             downloadBtn.onclick = () => {
                 console.log("下载");
-                let str = jsonToIni(op.downloadData);
+                let str = jsonToIni(op.downloadData());
                 saveStrFile(str, op.value + `${op?.exName || ""}`);
             };
             div.append(downloadBtn);
             let readBtn = document.createElement("button");
             readBtn.innerHTML = "查看";
             readBtn.onclick = () => {
-                let str = jsonToIni(op.downloadData);
+                let str = jsonToIni(op.downloadData());
                 console.log(str);
             };
             div.append(readBtn);
@@ -1637,6 +1651,20 @@ function createStyleDom(op) {
         {
             key: "FONT_WEIGHT",
             title: "默认字体宽度",
+        },
+        {
+            title: "复制样式",
+            type: "fn",
+            fn: (v) => {
+                let otherStyleName = `STYLE${v}`;
+                if (!this.cssData[otherStyleName]) {
+                    let g = this.cssData["GLOBAL"];
+                    g.STYLE_NUM = (Number(g.STYLE_NUM) + 1).toString();
+                }
+                this.cssData[otherStyleName] = JSON.parse(JSON.stringify(this.cssData[styleName]));
+                saveJson(this.cssUrl, this.cssData);
+                new JMain();
+            }
         }
     ];
     for (let i = 0; i < list.length; i++) {

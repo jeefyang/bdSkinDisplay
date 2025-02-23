@@ -45,7 +45,7 @@ declare class JAction {
     createNewBoardKey(this: JMain): void;
 }
 /** 输入码 */
-declare type BoardInputType = {
+type BoardInputType = {
     /**
      * 输入码背景指定样式
      * @example BACK_STYLE=127表示调用 127 号风格（由default.css 生成）
@@ -58,7 +58,7 @@ declare type BoardInputType = {
     FORE_STYLE?: string;
 };
 /** 候选栏 */
-declare type BoardCandType = {
+type BoardCandType = {
     /**
      *  候选栏绘制时的坐标 X,Y 及宽 W,高 H
      * @example VIEW_RECT=0,0,720,90表示(0,0)处绘制一个宽 720,高 90的 cand
@@ -77,7 +77,7 @@ declare type BoardCandType = {
     TYPE?: string;
 };
 /** 面板 */
-declare type BoardPanelType = {
+type BoardPanelType = {
     /**
      * 面板背景指定样式
      * @example BACK_STYLE=116
@@ -126,7 +126,7 @@ declare type BoardPanelType = {
     CUSTOM_RECT?: string;
 };
 /** 功能候选字类型面板参数 */
-declare type BoardMoreType = {
+type BoardMoreType = {
     /**
      * 更多候选字拆分的单元格个数（行数,列数）
      * @example GRID=4,3在更多候选类型面板的候选区,绘制一个 4*3 的表格
@@ -154,7 +154,7 @@ declare type BoardMoreType = {
     LAYOUT_NAME?: string;
 };
 /**气泡提示 */
-declare type BoardHIntType = {
+type BoardHIntType = {
     /**
      * 当前面板调用的气泡样式数据文件名（不需要写后缀名.pop）
      * @example LAYOUT_NAME=hint1
@@ -167,7 +167,7 @@ declare type BoardHIntType = {
     TYPE?: string;
 };
 /** 列表,筛选列表 */
-declare type BoardListType = {
+type BoardListType = {
     /** 列表背景边框样式 */
     BACK_STYLE?: string;
     /** 列表单元格样式 */
@@ -222,7 +222,7 @@ declare type BoardListType = {
     SCROLL_SIDE?: string;
 };
 /** 按键 */
-declare type BoardKeyType = {
+type BoardKeyType = {
     /** 背景样式
      * @example BACK_STYLE=118
      */
@@ -290,7 +290,7 @@ declare type BoardKeyType = {
 /**
  * 补丁,针对按键 KEY 的STAT_STYLE 生效
  */
-declare type BoardTipType = {
+type BoardTipType = {
     /** 状态补丁生效时,按键背景指定样式 */
     BACK_STYLE?: string;
     /** 状态补丁生效时,按键前景指定样式,支持多前景,逗号分隔 */
@@ -317,7 +317,7 @@ declare type BoardTipType = {
 /**
  * 前影偏移类型,建议只在gen.ini 中起作用
  */
-declare type BoardOffsetType = {
+type BoardOffsetType = {
     /**
      * 自身矩阵中心点相对目标矩阵中心点的偏移量.（针对按键前景生效）目标矩阵的中心点：按键的正中心在主面板调用时,由属性 POS_TYPE 调用
      * @example 自身矩阵中心点相对目标矩阵中心点的偏移量.（针对按键前景生效）目标矩阵的中心点：按键的正中心
@@ -325,7 +325,7 @@ declare type BoardOffsetType = {
     POS?: string;
 };
 /** 显示候选字 */
-declare type CndCandType = {
+type CndCandType = {
     /**
      * 候选栏背景样式
      * @example BACK_STYLE=116
@@ -373,7 +373,7 @@ declare type CndCandType = {
 /**
  * 切换输入法面板的容器,快捷面板切换栏
  */
-declare type CndSwitchType = {
+type CndSwitchType = {
     /**
      * 容器背景样式（边框样式）
      * @example NML_BACK_STYLE=124
@@ -407,7 +407,7 @@ declare type CndSwitchType = {
     KEYMAP_MODE?: string;
 };
 /** 附加的图标 */
-declare type CndIconType = {
+type CndIconType = {
     /** 图标背景样式 */
     BACK_STYLE?: string;
     /** 图标前景样式 */
@@ -447,7 +447,7 @@ declare type CndIconType = {
     STAT_STYLE?: string;
 };
 /** 图标状态补丁 */
-declare type CndTipType = {
+type CndTipType = {
     /** 状态补丁生效时,图标背景样式 */
     BACK_STYKE?: string;
     /** 状态补丁生效时,图标前景样式 */
@@ -456,14 +456,14 @@ declare type CndTipType = {
     KEY?: string;
 };
 /** 整体定义 */
-declare type PopGlobalType = {
+type PopGlobalType = {
     /**
      * 图案的数量
      * @example ICON_NUM=3
      */
     ICON_NUM?: string;
 };
-declare type PopHintType = {
+type PopHintType = {
     /**
      * 气泡的图案样式序号（指向[ICON*]）
      * @example BACK_ICON=1 表示普通气泡使用[ICON1]的样式
@@ -473,7 +473,7 @@ declare type PopHintType = {
     ARROW_ICON?: string;
 };
 /** 长按后的条状气泡 */
-declare type PopBarType = {
+type PopBarType = {
     /**
      *  气泡的图案样式序号（指向[ICON*]）
      * @example BACK_ICON=3
@@ -487,7 +487,7 @@ declare type PopBarType = {
     /** 列表单元格样式 */
     CELL_STYLE?: string;
 };
-declare type PopCrossType = {
+type PopCrossType = {
     /** 上方字符使用的图标序号 */
     UP_ICON?: string;
     /** 下方字符使用的图标序号 */
@@ -500,7 +500,7 @@ declare type PopCrossType = {
     CENTER_ICON?: string;
 };
 /** 按键拖拉时的气泡目前仅IPHONE 需要支持 */
-declare type PopDrawType = {
+type PopDrawType = {
     /** 上划的气泡图标序号 */
     DRAW_UP_ICON?: string;
     /** 下划的气泡图标序号 */
@@ -511,7 +511,7 @@ declare type PopDrawType = {
     DRAW_RT_ICON?: string;
 };
 /** 定义显示的气泡图案 */
-declare type PopIconType = {
+type PopIconType = {
     /** 背景样式 */
     BACK_STYLE?: string;
     /** 前景样式 */
@@ -533,7 +533,7 @@ declare type PopIconType = {
     PADDING?: string;
 };
 /** 整体定义 */
-declare type CssGlobalType = {
+type CssGlobalType = {
     /**
      * 预定义风格样式的数量
      * @example STYLE_NUM=210
@@ -546,7 +546,7 @@ declare type CssGlobalType = {
     FOR?: string;
 };
 /** 风格样式 */
-declare type CssStyleType = {
+type CssStyleType = {
     /**
      * 按键前景显示的文字
      * @example SHOW=Q
@@ -608,7 +608,7 @@ declare type CssStyleType = {
     PRESS_ANIM?: string;
 };
 /** 整体定义 */
-declare type TilGlobalType = {
+type TilGlobalType = {
     /**
      * 是否用到 ALPHA 混合 0 ：不透明 1 ：半透明 2 ：全透明
      * @example USE_ALPHA=1 在新版皮肤中,已无明显作用.
@@ -621,7 +621,7 @@ declare type TilGlobalType = {
     TILE_NUM?: string;
 };
 /** 切片 */
-declare type TilImgType = {
+type TilImgType = {
     /**
      * 切片的坐标 X,Y 及宽 W,高 H
      * @example SOURCE_RECT=112,0,71,36 表示从对应的 png 素材切片,在(112,0)处,切出一个宽 71,高 36 的矩形做为切片
@@ -648,11 +648,12 @@ declare class JBoardChildDom {
     /** 创建多选模式下元素 */
     createBoardMultiKeyListDom(this: JMain): void;
 }
-declare type childDomType<K extends string = string> = {
-    key: K;
-    type?: "normal" | "select" | "style" | "color" | "offset" | "key";
+type childDomType<K extends string = string> = {
+    key?: K;
+    type?: "normal" | "select" | "style" | "color" | "offset" | "key" | "fn";
     title: string;
     tip?: string;
+    fn?: (v: string) => void;
     select?: {
         name: string;
         value: string;
@@ -818,7 +819,7 @@ declare class JOPDiv {
         title: string;
         value: string;
         inputFunc?: (s: string) => void;
-        downloadData?: any;
+        downloadData?: () => any;
         isOnlyRead?: boolean;
         exName?: string;
     }): void;
@@ -865,7 +866,7 @@ declare function saveBlobFile(blob: Blob, fileName: string): void;
    * @param fileName 保存的文件名
    */
 declare function saveBase64File(base64: string, fileName: string): void;
-declare type JImgData = {
+type JImgData = {
     b64: string;
     til: any;
     w: number;

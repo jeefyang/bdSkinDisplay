@@ -65,7 +65,22 @@ function createStyleDom(this: JMain, op: {
         {
             key: "FONT_WEIGHT",
             title: "默认字体宽度",
+        },
+        {
+            title: "复制样式",
+            type: "fn",
+            fn: (v) => {
+                let otherStyleName = `STYLE${v}`
+                if (!this.cssData[otherStyleName]) {
+                    let g: CssGlobalType = this.cssData["GLOBAL"]
+                    g.STYLE_NUM = (Number(g.STYLE_NUM) + 1).toString()
+                }
+                this.cssData[otherStyleName] = JSON.parse(JSON.stringify(this.cssData[styleName]))
+                saveJson(this.cssUrl, this.cssData)
+                new JMain()
+            }
         }
+
     ]
     for (let i = 0; i < list.length; i++) {
         let childDiv = this.createChildDom({ data: list[i], type: styleName, baseData: this.cssData, saveUrl: this.cssUrl })

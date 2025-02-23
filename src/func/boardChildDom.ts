@@ -7,6 +7,7 @@ class JBoardChildDom {
         if (!this.boardData[type]) {
             return
         }
+        
         let title = document.createElement("h3")
         title.innerHTML = "列表数据"
         title.style.textAlign = "center"
