@@ -130,3 +130,7 @@ dist
 .pnp.*
 testSkin
 .history
+
+index.js
+imdex.js.map
+index.d.ts
