@@ -1,136 +1,136 @@
 type childDomType<K extends string = string> = {
-    key?: K
-    type?: "normal" | "select" | "style" | "color" | "offset" | "key" | "fn"
-    title: string
-    tip?: string
-    fn?: (v: string) => void
-    select?: { name: string, value: string }[]
-}
+    key?: K;
+    type?: "normal" | "select" | "style" | "color" | "offset" | "key" | "fn";
+    title: string;
+    tip?: string;
+    fn?: (v: string) => void;
+    select?: { name: string, value: string | number; }[];
+};
 
 /** 创建子元素 */
 function createChildDom<K extends string = string>(this: JMain, op: {
     data: childDomType<K>,
-    baseData: any
-    type: string
-    saveUrl: string
+    baseData: any;
+    type: string;
+    saveUrl: string;
 }) {
     if (!op.type) {
-        return
+        return;
     }
     if (!op.data.type) {
-        op.data.type = "normal"
+        op.data.type = "normal";
     }
-    let styleOrOffsetDiv: HTMLDivElement = document.createElement("div")
-    let div = document.createElement("div")
-    let p = document.createElement("label")
-    p.title = op.data.key
-    p.innerHTML = op.data.title
-    div.append(p)
-    let styleBtnDiv: HTMLDivElement
-    let offsetBtnDiv: HTMLDivElement
+    let styleOrOffsetDiv: HTMLDivElement = document.createElement("div");
+    let div = document.createElement("div");
+    let p = document.createElement("label");
+    p.title = op.data.key;
+    p.innerHTML = op.data.title;
+    div.append(p);
+    let styleBtnDiv: HTMLDivElement;
+    let offsetBtnDiv: HTMLDivElement;
     let styleFunc = (v: string) => {
-        styleBtnDiv.innerHTML = ""
-        let styleList = v.split(",")
-        let curStyleName: string = ""
+        styleBtnDiv.innerHTML = "";
+        let styleList = v.split(",");
+        let curStyleName: string = "";
         for (let i = 0; i < styleList.length; i++) {
             if (!styleList[i]) {
-                continue
+                continue;
             }
-            let btn = document.createElement("button")
-            btn.innerHTML = styleList[i]
+            let btn = document.createElement("button");
+            btn.innerHTML = styleList[i];
             btn.onclick = () => {
                 if (styleOrOffsetDiv.innerHTML && styleList[i] == curStyleName) {
-                    styleOrOffsetDiv.innerHTML = ""
-                    styleOrOffsetDiv.setAttribute("class", "")
-                    return
+                    styleOrOffsetDiv.innerHTML = "";
+                    styleOrOffsetDiv.setAttribute("class", "");
+                    return;
                 }
-                curStyleName = styleList[i]
-                styleOrOffsetDiv.setAttribute("class", "childStyleBox")
-                styleOrOffsetDiv.innerHTML = ""
-                let child = this.createStyleDom({ styleCount: styleList[i] })
-                styleOrOffsetDiv.append(child)
-            }
-            styleBtnDiv.append(btn)
+                curStyleName = styleList[i];
+                styleOrOffsetDiv.setAttribute("class", "childStyleBox");
+                styleOrOffsetDiv.innerHTML = "";
+                let child = this.createStyleDom({ styleCount: styleList[i] });
+                styleOrOffsetDiv.append(child);
+            };
+            styleBtnDiv.append(btn);
         }
-    }
+    };
     let offsetFunc = (v: string) => {
-        offsetBtnDiv.innerHTML = ""
-        let offsetList = v.split(",")
-        let curOffsetName: string = ""
+        offsetBtnDiv.innerHTML = "";
+        let offsetList = v.split(",");
+        let curOffsetName: string = "";
         for (let i = 0; i < offsetList.length; i++) {
             if (!offsetList[i]) {
-                continue
+                continue;
             }
-            let btn = document.createElement("button")
-            btn.innerHTML = offsetList[i]
+            let btn = document.createElement("button");
+            btn.innerHTML = offsetList[i];
             btn.onclick = () => {
                 if (styleOrOffsetDiv.innerHTML && offsetList[i] == curOffsetName) {
-                    styleOrOffsetDiv.innerHTML = ""
-                    styleOrOffsetDiv.setAttribute("class", "")
-                    return
+                    styleOrOffsetDiv.innerHTML = "";
+                    styleOrOffsetDiv.setAttribute("class", "");
+                    return;
                 }
 
-                curOffsetName = offsetList[i]
-                styleOrOffsetDiv.setAttribute("class", "childOffsetBox")
-                styleOrOffsetDiv.innerHTML = ""
-                let child = this.createOffsetDom({ offsetCount: offsetList[i] })
-                child && styleOrOffsetDiv.append(child)
-            }
-            offsetBtnDiv.append(btn)
+                curOffsetName = offsetList[i];
+                styleOrOffsetDiv.setAttribute("class", "childOffsetBox");
+                styleOrOffsetDiv.innerHTML = "";
+                let child = this.createOffsetDom({ offsetCount: offsetList[i] });
+                child && styleOrOffsetDiv.append(child);
+            };
+            offsetBtnDiv.append(btn);
         }
-    }
+    };
     if (op.data.type == "select") {
-        let select = document.createElement("select")
-        select.title = op.data.tip || ""
-        select.value = op.baseData[op.type][op.data.key] || ""
+        let select = document.createElement("select");
+        select.title = op.data.tip || "";
         for (let i = 0; i < op.data.select.length; i++) {
-            let c = op.data.select[i]
-            let o = document.createElement("option")
-            o.innerHTML = c.name
-            o.value = c.value
-            select.append(o)
+            let c = op.data.select[i];
+            let o = document.createElement("option");
+            o.innerHTML = c.name;
+            o.value = c.value as string;
+            select.append(o);
         }
+        select.value = op.baseData[op.type][op.data.key] || "";
         select.addEventListener("change", () => {
-            op.baseData[op.type][op.data.key] = select.value
-            saveJson(op.saveUrl, op.baseData)
-            this.reFreshPhoneSkin()
-        })
-        div.append(select)
+            op.baseData[op.type][op.data.key] = select.value;
+            saveJson(op.saveUrl, op.baseData);
+            this.reFreshPhoneSkin();
+        });
+        div.append(select);
     }
     else if (op.data.type == "fn") {
-        let input = document.createElement("input")
-        div.append(input)
-        let button = document.createElement("button")
-        button.innerHTML = "执行"
+        let input = document.createElement("input");
+        div.append(input);
+        let button = document.createElement("button");
+        button.innerHTML = "执行";
         button.onclick = () => {
-            op.data.fn(input.value)
-        }
-        div.append(input, button)
+            op.data.fn(input.value);
+        };
+        div.append(input, button);
     }
     else {
-        let input = document.createElement("input")
-        let colorInput: HTMLInputElement
-        let keyBtn: HTMLButtonElement
-        input.title = op.data.tip || ""
-        input.value = op.baseData[op.type][op.data.key] || ""
-        div.append(input)
+        let input = document.createElement("input");
+        let colorInput: HTMLInputElement;
+        let keyBtn: HTMLButtonElement;
+        input.title = op.data.tip || "";
+        input.value = op.baseData[op.type][op.data.key] || "";
+        div.append(input);
         input.addEventListener("change", (e) => {
-            op.baseData[op.type][op.data.key] = input.value
-            colorInput && (colorInput.value = "#" + input.value)
-            saveJson(op.saveUrl, op.baseData)
+            op.baseData[op.type][op.data.key] = input.value;
+            colorInput && (colorInput.value = "#" + input.value);
+            saveJson(op.saveUrl, op.baseData);
             if (styleBtnDiv) {
-                styleFunc(input.value)
+                styleFunc(input.value);
             }
             if (offsetBtnDiv) {
-                offsetFunc(input.value)
+                offsetFunc(input.value);
             }
-            this.reFreshPhoneSkin()
-        })
+            this.reFreshPhoneSkin();
+        });
         if (op.data.type == "key") {
-            keyBtn = document.createElement("button")
-            keyBtn.innerHTML = "特殊按键"
-            div.append(keyBtn)
-            let keyList: { v: string, d: string }[] = [
+            keyBtn = document.createElement("button");
+            keyBtn.innerHTML = "特殊按键";
+            div.append(keyBtn);
+            let keyList: { v: string, d: string; }[] = [
                 { v: "F1", d: "切换到符号面板" },
                 { v: "F2", d: "" },
                 { v: "F3", d: "切换拇指,全键盘" },
@@ -221,67 +221,67 @@ function createChildDom<K extends string = string>(this: JMain, op: {
                 { v: "F88", d: "" },
                 { v: "F89", d: "" },
                 { v: "F90", d: "" },
-            ]
+            ];
             keyBtn.onclick = () => {
-                console.log("特殊按键")
-                let backDiv = document.createElement("div")
-                document.body.append(backDiv)
-                backDiv.setAttribute("class", "specialKey")
+                console.log("特殊按键");
+                let backDiv = document.createElement("div");
+                document.body.append(backDiv);
+                backDiv.setAttribute("class", "specialKey");
                 backDiv.onclick = () => {
-                    backDiv.remove()
-                }
-                let formDiv = document.createElement("div")
-                backDiv.append(formDiv)
-                let count = 30
-                let table: HTMLTableElement
-                let tr: HTMLTableRowElement
+                    backDiv.remove();
+                };
+                let formDiv = document.createElement("div");
+                backDiv.append(formDiv);
+                let count = 30;
+                let table: HTMLTableElement;
+                let tr: HTMLTableRowElement;
                 for (let i = 0; i < keyList.length; i++) {
                     if (i % count == 0) {
-                        table = document.createElement("table")
-                        formDiv.append(table)
+                        table = document.createElement("table");
+                        formDiv.append(table);
                     }
-                    let tr = document.createElement("tr")
-                    let tdV = document.createElement("td")
-                    tdV.innerHTML = `<a class="form_a" href="#">${keyList[i].v}</a>`
-                    let tdD = document.createElement("td")
-                    tdD.innerHTML = `<a class="form_a" href="#">${keyList[i].d}</a>`
+                    let tr = document.createElement("tr");
+                    let tdV = document.createElement("td");
+                    tdV.innerHTML = `<a class="form_a" href="#">${keyList[i].v}</a>`;
+                    let tdD = document.createElement("td");
+                    tdD.innerHTML = `<a class="form_a" href="#">${keyList[i].d}</a>`;
                     tdV.onclick = tdD.onclick = () => {
-                        input.value = keyList[i].v
-                        op.baseData[op.type][op.data.key] = input.value
-                        saveJson(op.saveUrl, op.baseData)
-                        this.saveOPJson()
-                        this.reFreshPhoneSkin()
-                    }
-                    tr.append(tdV, tdD)
-                    table.append(tr)
+                        input.value = keyList[i].v;
+                        op.baseData[op.type][op.data.key] = input.value;
+                        saveJson(op.saveUrl, op.baseData);
+                        this.saveOPJson();
+                        this.reFreshPhoneSkin();
+                    };
+                    tr.append(tdV, tdD);
+                    table.append(tr);
                 }
-            }
+            };
         }
         if (op.data.type == "color") {
-            colorInput = document.createElement("input")
-            colorInput.setAttribute("type", "color")
-            colorInput.value = "#" + input.value
+            colorInput = document.createElement("input");
+            colorInput.setAttribute("type", "color");
+            colorInput.value = "#" + input.value;
             colorInput.addEventListener("change", () => {
-                console.log(colorInput.value)
-                op.baseData[op.type][op.data.key] = colorInput.value.slice(1)
-                saveJson(op.saveUrl, op.baseData)
-                this.reFreshPhoneSkin()
-            })
-            div.append(colorInput)
+                console.log(colorInput.value);
+                op.baseData[op.type][op.data.key] = colorInput.value.slice(1);
+                saveJson(op.saveUrl, op.baseData);
+                this.reFreshPhoneSkin();
+            });
+            div.append(colorInput);
         }
         if (op.data.type == "style") {
-            styleBtnDiv = document.createElement("div")
-            styleFunc(input.value)
-            div.append(styleBtnDiv)
+            styleBtnDiv = document.createElement("div");
+            styleFunc(input.value);
+            div.append(styleBtnDiv);
         }
         if (op.data.type == "offset") {
-            offsetBtnDiv = document.createElement("div")
-            offsetFunc(input.value)
-            div.append(offsetBtnDiv)
+            offsetBtnDiv = document.createElement("div");
+            offsetFunc(input.value);
+            div.append(offsetBtnDiv);
         }
         if (op.data.type == "style" || op.data.type == "offset") {
-            div.append(styleOrOffsetDiv)
+            div.append(styleOrOffsetDiv);
         }
     }
-    return div
+    return div;
 }

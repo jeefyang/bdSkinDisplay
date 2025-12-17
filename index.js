@@ -414,15 +414,15 @@ class JBoardChildDom {
             { key: "KEY", title: "按下后执行的操作", tip: "注：ICON 不支持点划操作,不支持输出字符和输入码（1,2,3,4 除外,会自动转换成光标移动功能,例 KEY=1）\nKEY=F31\n按下后执行 F31（logo 菜单）", type: "key" },
             {
                 key: "ANCHOR_TYPE", title: "锚点类型", tip: "1～9 分别代表 CAND 矩阵内的 9 个点,以这些点为原点.\nANCHOR_TYPE=5\n以 CAND 正中心为原点(0,0),之所以附加这么多的锚点类型是为了 ICON 的精确定位", type: "select", select: [
-                    { name: "1 左上角", value: "1" },
-                    { name: "2 中上", value: "2" },
-                    { name: "3 右上角", value: "3" },
-                    { name: "4 中左", value: "4" },
-                    { name: "5 正中心", value: "5" },
-                    { name: "6 中右", value: "6" },
-                    { name: "7 左下角", value: "7" },
-                    { name: "8 中下", value: "8" },
-                    { name: "9 右下角", value: "9" },
+                    { name: "1 左上角", value: 1 },
+                    { name: "2 中上", value: 2 },
+                    { name: "3 右上角", value: 3 },
+                    { name: "4 中左", value: 4 },
+                    { name: "5 正中心", value: 5 },
+                    { name: "6 中右", value: 6 },
+                    { name: "7 左下角", value: 7 },
+                    { name: "8 中下", value: 8 },
+                    { name: "9 右下角", value: 9 },
                 ]
             },
             { key: "POS", title: "偏移", tip: "以 ANCHOR_TYPE 锚点类型为原点\n（0,0）,ICON 左上角相对此点的偏移\nANCHOR_TYPE=5\nPOS=-60,-20\n以类型 5 为原点,向左偏移 60,向上偏移 20（向右向下为增）" },
@@ -568,7 +568,6 @@ function createChildDom(op) {
     if (op.data.type == "select") {
         let select = document.createElement("select");
         select.title = op.data.tip || "";
-        select.value = op.baseData[op.type][op.data.key] || "";
         for (let i = 0; i < op.data.select.length; i++) {
             let c = op.data.select[i];
             let o = document.createElement("option");
@@ -576,6 +575,7 @@ function createChildDom(op) {
             o.value = c.value;
             select.append(o);
         }
+        select.value = op.baseData[op.type][op.data.key] || "";
         select.addEventListener("change", () => {
             op.baseData[op.type][op.data.key] = select.value;
             saveJson(op.saveUrl, op.baseData);
@@ -1522,19 +1522,47 @@ class JOPDiv {
     }
     /** 创建文件div */
     creatFileDiv() {
-        this.createChildFileDiv({ title: "基础文件夹:", value: this.op.dirBase, inputFunc: (s) => { this.op.dirBase = s; } });
-        this.createChildFileDiv({ title: "资源文件夹:", value: this.op.resDir, inputFunc: (s) => { this.op.resDir = s; } });
-        this.createChildFileDiv({ title: "键盘文件夹:", value: this.op.boardDir, inputFunc: (s) => { this.op.boardDir = s; } });
-        this.createChildFileDiv({ title: "样式文件夹:", value: this.op.cssDir, inputFunc: (s) => { this.op.cssDir = s; } });
-        this.createChildFileDiv({ title: "样式表名:", value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s; }, downloadData: () => { return this.cssData; } });
-        this.createChildFileDiv({ title: "键盘表名:", value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s; }, downloadData: () => { return this.boardData; } });
-        this.createChildFileDiv({ title: "配置名:", value: this.op.genName, inputFunc: (s) => { this.op.genName = s; }, downloadData: () => { return this.genData; } });
-        this.createChildFileDiv({ title: "候选框名:", value: this.op.candName, isOnlyRead: true, downloadData: () => { return this.candData; }, exName: ".cnd" });
+        this.createChildFileDiv({ title: "基础文件夹:", getUrlFn: () => { return this.op.dirBase; }, value: this.op.dirBase, inputFunc: (s) => { this.op.dirBase = s; } });
+        this.createChildFileDiv({ title: "资源文件夹:", getUrlFn: () => { return `${this.op.dirBase}/${this.op.resDir}`; }, value: this.op.resDir, inputFunc: (s) => { this.op.resDir = s; } });
+        this.createChildFileDiv({ title: "键盘文件夹:", getUrlFn: () => { return `${this.op.dirBase}/${this.op.boardDir}`; }, value: this.op.boardDir, inputFunc: (s) => { this.op.boardDir = s; } });
+        this.createChildFileDiv({ title: "样式文件夹:", getUrlFn: () => { return `${this.op.dirBase}/${this.op.cssDir}`; }, value: this.op.cssDir, inputFunc: (s) => { this.op.cssDir = s; } });
+        this.createChildFileDiv({ title: "样式表名:", getUrlFn: () => { return this.cssUrl; }, value: this.op.cssName, inputFunc: (s) => { this.op.cssName = s; }, downloadData: () => { return this.cssData; } });
+        this.createChildFileDiv({ title: "键盘表名:", getUrlFn: () => { return this.boardUrl; }, value: this.op.boardName, inputFunc: (s) => { this.op.boardName = s; }, downloadData: () => { return this.boardData; } });
+        this.createChildFileDiv({ title: "配置名:", getUrlFn: () => { return this.genUrl; }, value: this.op.genName, inputFunc: (s) => { this.op.genName = s; }, downloadData: () => { return this.genData; } });
+        this.createChildFileDiv({ title: "候选框名:", getUrlFn: () => { return this.candUrl; }, value: this.op.candName, isOnlyRead: true, downloadData: () => { return this.candData; }, exName: ".cnd" });
         this.createChildFileDiv({
-            title: "冒泡名:", value: this.op.hintName, isOnlyRead: true, downloadData: () => {
+            title: "冒泡名:", getUrlFn: () => { return this.hintUrl; }, value: this.op.hintName, isOnlyRead: true, downloadData: () => {
                 return this.hintData;
             }, exName: ".ini"
         });
+        const label = document.createElement("label");
+        label.innerHTML = "总操作:";
+        const saveBtn = document.createElement("button");
+        saveBtn.innerHTML = '保存修改文件zip';
+        saveBtn.addEventListener("click", () => {
+            const keys = Object.keys(localStorage);
+            //@ts-expect-error
+            const zip = new JSZip();
+            for (let key of keys) {
+                if (key.startsWith(this.op.dirBase)) {
+                    zip.file(key, jsonToIni(JSON.parse(localStorage[key])));
+                }
+            }
+            zip.generateAsync({ type: "blob" }).then(function (content) {
+                const formatter = new Intl.DateTimeFormat('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+                //@ts-expect-error
+                saveAs(content, formatter.format(new Date()) + ".zip");
+            });
+        });
+        this.phoneFileDiv.append(label, saveBtn);
     }
     /** 创建单个文件div */
     createChildFileDiv(op) {
@@ -1575,6 +1603,21 @@ class JOPDiv {
                 saveStrFile(str, op.value + `${op?.exName || ""}`);
             };
             div.append(downloadBtn);
+            const copyBtn = document.createElement("button");
+            copyBtn.innerHTML = "复制文本";
+            copyBtn.onclick = () => {
+                let str = jsonToIni(op.downloadData());
+                copyStr(str);
+            };
+            div.append(copyBtn);
+            const deleteCacheBtn = document.createElement("button");
+            deleteCacheBtn.innerHTML = "删除缓存";
+            deleteCacheBtn.onclick = () => {
+                localStorage.removeItem(op.getUrlFn());
+                location.reload();
+                alert("删除成功");
+            };
+            div.append(deleteCacheBtn);
             let readBtn = document.createElement("button");
             readBtn.innerHTML = "查看";
             readBtn.onclick = () => {
@@ -1806,6 +1849,9 @@ function loadJson(key) {
 function saveStrFile(text, fileName) {
     var blob = new Blob([text]);
     saveBlobFile(blob, fileName);
+}
+function copyStr(text) {
+    navigator.clipboard.writeText(text);
 }
 /**
    * 保存二进制文件

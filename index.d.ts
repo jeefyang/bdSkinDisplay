@@ -656,7 +656,7 @@ type childDomType<K extends string = string> = {
     fn?: (v: string) => void;
     select?: {
         name: string;
-        value: string;
+        value: string | number;
     }[];
 };
 /** 创建子元素 */
@@ -753,10 +753,10 @@ declare class JMain {
         /** 是否在有候选字时显示 */
         isPersist: boolean;
         /** 配置切换key */
-        opSwitchKey: "key" | "list" | "multiKey";
+        opSwitchKey: "list" | "key" | "multiKey";
         /** 单选key */
         selectSingleKey: string;
-        selectSingleType: "key" | "icon";
+        selectSingleType: "icon" | "key";
         /** 多选键 */
         selectMultiKeyList: string[];
         /** 多选自加 */
@@ -818,6 +818,7 @@ declare class JOPDiv {
     createChildFileDiv(this: JMain, op: {
         title: string;
         value: string;
+        getUrlFn: () => string;
         inputFunc?: (s: string) => void;
         downloadData?: () => any;
         isOnlyRead?: boolean;
@@ -854,6 +855,7 @@ declare function loadJson(key: string): any;
     * @param fileName 保存的文件名
     */
 declare function saveStrFile(text: string, fileName: string): void;
+declare function copyStr(text: string): void;
 /**
    * 保存二进制文件
    * @param blob 二进制内容

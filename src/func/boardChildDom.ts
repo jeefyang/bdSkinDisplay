@@ -2,16 +2,16 @@ class JBoardChildDom {
 
     /** 创建列表模式下元素 */
     createBoardListDom(this: JMain) {
-        this.phoneCmdDiv.innerHTML = ""
-        let type = "LIST"
+        this.phoneCmdDiv.innerHTML = "";
+        let type = "LIST";
         if (!this.boardData[type]) {
-            return
+            return;
         }
-        
-        let title = document.createElement("h3")
-        title.innerHTML = "列表数据"
-        title.style.textAlign = "center"
-        this.phoneCmdDiv.append(title)
+
+        let title = document.createElement("h3");
+        title.innerHTML = "列表数据";
+        title.style.textAlign = "center";
+        this.phoneCmdDiv.append(title);
         let inputList: childDomType<keyof BoardListType>[] = [
             { key: "BACK_STYLE", title: "列表背景边框样式:", tip: "只能一个", type: "style" },
             { key: "CELL_STYLE", title: "列表单元格样式:", tip: "", type: "style" },
@@ -48,53 +48,53 @@ class JBoardChildDom {
                     { name: "对应向外", value: "1" }
                 ]
             }
-        ]
+        ];
         for (let i = 0; i < inputList.length; i++) {
-            let div = this.createChildDom({ data: inputList[i], baseData: this.boardData, saveUrl: this.boardUrl, type: type })
+            let div = this.createChildDom({ data: inputList[i], baseData: this.boardData, saveUrl: this.boardUrl, type: type });
             if (!div) {
-                continue
+                continue;
             }
-            this.phoneCmdDiv.append(div, document.createElement('br'))
+            this.phoneCmdDiv.append(div, document.createElement('br'));
         }
     }
 
     /** 创建单键模式下按键元素 */
     createBoardSingleKeyDom(this: JMain) {
-        this.phoneCmdDiv.innerHTML = ""
-        let title = document.createElement("h3")
-        title.innerHTML = `单键数据\n${this.op.selectSingleKey}`
-        title.style.textAlign = "center"
-        this.phoneCmdDiv.append(title)
+        this.phoneCmdDiv.innerHTML = "";
+        let title = document.createElement("h3");
+        title.innerHTML = `单键数据\n${this.op.selectSingleKey}`;
+        title.style.textAlign = "center";
+        this.phoneCmdDiv.append(title);
         if (!this.op.selectSingleKey) {
-            return
+            return;
         }
-        let titleDiv = document.createElement("div")
-        let titleDiv_Label = document.createElement("label")
-        titleDiv_Label.innerHTML = "单键:KEY"
-        let titleDiv_Input = document.createElement("input")
-        titleDiv_Input.value = this.op.selectSingleKey.replace("KEY", "")
-        titleDiv_Input.type = "number"
+        let titleDiv = document.createElement("div");
+        let titleDiv_Label = document.createElement("label");
+        titleDiv_Label.innerHTML = "单键:KEY";
+        let titleDiv_Input = document.createElement("input");
+        titleDiv_Input.value = this.op.selectSingleKey.replace("KEY", "");
+        titleDiv_Input.type = "number";
         titleDiv_Input.addEventListener("change", () => {
-            let name = "KEY" + (titleDiv_Input.value)
+            let name = "KEY" + (titleDiv_Input.value);
             if (!this.keyDomList[name]) {
-                let check = window.confirm("不存在,需要创建吗?")
+                let check = window.confirm("不存在,需要创建吗?");
                 if (check) {
-                    this.boardData[name] = {}
-                    let p: BoardPanelType = this.boardData["PANAL"]
-                    p.KEY_NUM = (Number(p.KEY_NUM) + 1).toString()
-                    this.op.selectSingleKey = name
-                    saveJson(this.boardUrl, this.boardData)
-                    this.saveOPJson()
+                    this.boardData[name] = {};
+                    let p: BoardPanelType = this.boardData["PANAL"];
+                    p.KEY_NUM = (Number(p.KEY_NUM) + 1).toString();
+                    this.op.selectSingleKey = name;
+                    saveJson(this.boardUrl, this.boardData);
+                    this.saveOPJson();
                 }
-                new JMain()
-                return
+                new JMain();
+                return;
             }
-            this.op.selectSingleKey = name
-            this.saveOPJson()
-            new JMain()
-        })
-        titleDiv.append(titleDiv_Label, titleDiv_Input)
-        this.phoneCmdDiv.append(titleDiv)
+            this.op.selectSingleKey = name;
+            this.saveOPJson();
+            new JMain();
+        });
+        titleDiv.append(titleDiv_Label, titleDiv_Input);
+        this.phoneCmdDiv.append(titleDiv);
         let inputList: childDomType<keyof BoardKeyType>[] = [
             { key: "BACK_STYLE", title: "按键背景指定样式:", type: "style" },
             { key: "FORE_STYLE", title: "按键前景指定样式:", tip: "允许多个前景,前景间用英文逗号分隔\nFORE_STYLE=1,88,200\n表示此键有 1,88,200 三个前景", type: "style" },
@@ -111,68 +111,68 @@ class JBoardChildDom {
             { key: "HOLDSYM", title: "长按后对应的字符集:", tip: "（字符之间无分隔符）,以字符形式直接输出\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLDSYM=ABCD@#\n表示长按对应的字符集是 ABCD@#\n然后通过手势选择字符,字符间无间隔.\n当 HOLDSYM=单字符时,表示此字符直接上屏." },
             { key: "STAT_STYLE", title: "针对特殊状态时的显示及样式及功能:", tip: "（状态补丁）\nS 代表状态类型,_后的数字表示 TIP 序号\n（详见 S 状态定义）\n当有多个状态时,状态之间用“|”间隔\nSTAT_STYLE=S4_1|S14_2\n表示 S4（有输入码状态）时,执行[TIP1]补丁,使该键在显示或功能上发生改变.在 S14（中文临时英文输入状态）时,执行[TIP2]" },
             { key: "SPACE_VOICE_XY", title: "空格_语音_坐标:", tip: "(5.15+版新功能)\n长按空格语音图标的坐标定位,原点在空格按键矩阵的左上角\nSPACE_VOICE_XY=200,40" }
-        ]
+        ];
         for (let i = 0; i < inputList.length; i++) {
-            let div = this.createChildDom({ data: inputList[i], baseData: this.boardData, saveUrl: this.boardUrl, type: this.op.selectSingleKey })
+            let div = this.createChildDom({ data: inputList[i], baseData: this.boardData, saveUrl: this.boardUrl, type: this.op.selectSingleKey });
             if (!div) {
-                continue
+                continue;
             }
-            this.phoneCmdDiv.append(div, document.createElement('br'))
+            this.phoneCmdDiv.append(div, document.createElement('br'));
         }
     }
 
     /** 创建单键模式下图标元素 */
     createBoardSingleIconDom(this: JMain) {
-        this.phoneCmdDiv.innerHTML = ""
-        let title = document.createElement("h3")
-        title.innerHTML = `图标数据\n${this.op.selectSingleKey}`
-        title.style.textAlign = "center"
-        this.phoneCmdDiv.append(title)
-        let titleDiv = document.createElement("div")
-        let titleDiv_Label = document.createElement("label")
-        titleDiv_Label.innerHTML = "图标:ICON"
-        let titleDiv_Input = document.createElement("input")
-        titleDiv_Input.value = this.op.selectSingleKey.replace("ICON", "")
-        titleDiv_Input.type = "number"
+        this.phoneCmdDiv.innerHTML = "";
+        let title = document.createElement("h3");
+        title.innerHTML = `图标数据\n${this.op.selectSingleKey}`;
+        title.style.textAlign = "center";
+        this.phoneCmdDiv.append(title);
+        let titleDiv = document.createElement("div");
+        let titleDiv_Label = document.createElement("label");
+        titleDiv_Label.innerHTML = "图标:ICON";
+        let titleDiv_Input = document.createElement("input");
+        titleDiv_Input.value = this.op.selectSingleKey.replace("ICON", "");
+        titleDiv_Input.type = "number";
         titleDiv_Input.addEventListener("change", () => {
-            let name = "ICON" + (titleDiv_Input.value)
+            let name = "ICON" + (titleDiv_Input.value);
             if (!this.keyDomList[name]) {
-                let check = window.confirm("不存在,需要创建吗?")
+                let check = window.confirm("不存在,需要创建吗?");
                 if (check) {
-                    this.candData[name] = {}
-                    let p: CndCandType = this.candData["CAND"]
-                    p.ICON_NUM = (Number(p.ICON_NUM) + 1).toString()
-                    saveJson(this.candUrl, this.candData)
-                    this.saveOPJson()
+                    this.candData[name] = {};
+                    let p: CndCandType = this.candData["CAND"];
+                    p.ICON_NUM = (Number(p.ICON_NUM) + 1).toString();
+                    saveJson(this.candUrl, this.candData);
+                    this.saveOPJson();
                 }
-                new JMain()
-                return
+                new JMain();
+                return;
             }
-            this.op.selectSingleKey = name
-            this.saveOPJson()
-            new JMain()
-        })
-        titleDiv.append(titleDiv_Label, titleDiv_Input)
-        this.phoneCmdDiv.append(titleDiv)
+            this.op.selectSingleKey = name;
+            this.saveOPJson();
+            new JMain();
+        });
+        titleDiv.append(titleDiv_Label, titleDiv_Input);
+        this.phoneCmdDiv.append(titleDiv);
         if (!this.op.selectSingleKey) {
-            return
+            return;
         }
         let inputList: childDomType<keyof CndIconType>[] = [
             { key: "BACK_STYLE", title: "图标背景样式:", type: "style" },
             { key: "FORE_STYLE", title: "图标前景样式:", type: "style" },
             { key: "SIZE", title: "图标大小:", tip: "（宽,高）\nSIZE=45,60\n自己测试过,这里一般不指拉伸,指居中" },
-            { key: "KEY", title: "按下后执行的操作", tip: "注：ICON 不支持点划操作,不支持输出字符和输入码（1,2,3,4 除外,会自动转换成光标移动功能,例 KEY=1）\nKEY=F31\n按下后执行 F31（logo 菜单）",type:"key" },
+            { key: "KEY", title: "按下后执行的操作", tip: "注：ICON 不支持点划操作,不支持输出字符和输入码（1,2,3,4 除外,会自动转换成光标移动功能,例 KEY=1）\nKEY=F31\n按下后执行 F31（logo 菜单）", type: "key" },
             {
                 key: "ANCHOR_TYPE", title: "锚点类型", tip: "1～9 分别代表 CAND 矩阵内的 9 个点,以这些点为原点.\nANCHOR_TYPE=5\n以 CAND 正中心为原点(0,0),之所以附加这么多的锚点类型是为了 ICON 的精确定位", type: "select", select: [
-                    { name: "1 左上角", value: "1" },
-                    { name: "2 中上", value: "2" },
-                    { name: "3 右上角", value: "3" },
-                    { name: "4 中左", value: "4" },
-                    { name: "5 正中心", value: "5" },
-                    { name: "6 中右", value: "6" },
-                    { name: "7 左下角", value: "7" },
-                    { name: "8 中下", value: "8" },
-                    { name: "9 右下角", value: "9" },
+                    { name: "1 左上角", value: 1 },
+                    { name: "2 中上", value: 2 },
+                    { name: "3 右上角", value: 3 },
+                    { name: "4 中左", value: 4 },
+                    { name: "5 正中心", value: 5 },
+                    { name: "6 中右", value: 6 },
+                    { name: "7 左下角", value: 7 },
+                    { name: "8 中下", value: 8 },
+                    { name: "9 右下角", value: 9 },
                 ]
             },
             { key: "POS", title: "偏移", tip: "以 ANCHOR_TYPE 锚点类型为原点\n（0,0）,ICON 左上角相对此点的偏移\nANCHOR_TYPE=5\nPOS=-60,-20\n以类型 5 为原点,向左偏移 60,向上偏移 20（向右向下为增）" },
@@ -185,68 +185,68 @@ class JBoardChildDom {
                 ]
             },
             { key: "STAT_STYLE", title: "状态补丁", tip: "针对特殊状态时的显示及样式及功能\nS 代表状态类型,_后的数字表示 TIP序号（详见 S 状态定义）\n当有多个状态时,状态之间用“|”间隔\nSTAT_STYLE=S9_1\n当处在 S9（中文联想状态）时,执行[TIP1]" }
-        ]
+        ];
         for (let i = 0; i < inputList.length; i++) {
-            let div = this.createChildDom({ data: inputList[i], baseData: this.candData, saveUrl: this.candUrl, type: this.op.selectSingleKey })
+            let div = this.createChildDom({ data: inputList[i], baseData: this.candData, saveUrl: this.candUrl, type: this.op.selectSingleKey });
             if (!div) {
-                continue
+                continue;
             }
-            this.phoneCmdDiv.append(div, document.createElement('br'))
+            this.phoneCmdDiv.append(div, document.createElement('br'));
         }
     }
 
     /** 创建多选模式下元素 */
     createBoardMultiKeyListDom(this: JMain) {
-        this.phoneCmdDiv.innerHTML = ""
-        let title = document.createElement("h3")
-        title.innerHTML = "多键数据"
-        title.style.textAlign = "center"
-        this.phoneCmdDiv.append(title)
-        let div = document.createElement("div")
-        let p = document.createElement("label")
-        p.innerHTML = "按键集合:"
-        let input = document.createElement("textarea")
-        input.value = this.op.selectMultiKeyList.join(",")
+        this.phoneCmdDiv.innerHTML = "";
+        let title = document.createElement("h3");
+        title.innerHTML = "多键数据";
+        title.style.textAlign = "center";
+        this.phoneCmdDiv.append(title);
+        let div = document.createElement("div");
+        let p = document.createElement("label");
+        p.innerHTML = "按键集合:";
+        let input = document.createElement("textarea");
+        input.value = this.op.selectMultiKeyList.join(",");
         input.addEventListener("change", () => {
-            this.op.selectMultiKeyList = input.value.split(',')
-            this.saveOPJson()
-            this.reFreshPhoneSkin()
-        })
-        div.append(p, input)
-        this.phoneCmdDiv.append(div)
-        let moveList = this.op.multiAdd.split(',').map(c => Number(c))
-        let moveTilte = ["x:", "y:", "w:", "h:"]
+            this.op.selectMultiKeyList = input.value.split(',');
+            this.saveOPJson();
+            this.reFreshPhoneSkin();
+        });
+        div.append(p, input);
+        this.phoneCmdDiv.append(div);
+        let moveList = this.op.multiAdd.split(',').map(c => Number(c));
+        let moveTilte = ["x:", "y:", "w:", "h:"];
         for (let i = 0; i < moveList.length; i++) {
-            let div = document.createElement("div")
-            let p = document.createElement("label")
-            p.innerHTML = moveTilte[i]
-            let input = document.createElement("input")
-            input.value = moveList[i].toString()
-            let btn = document.createElement('button')
-            btn.innerHTML = "叠加"
+            let div = document.createElement("div");
+            let p = document.createElement("label");
+            p.innerHTML = moveTilte[i];
+            let input = document.createElement("input");
+            input.value = moveList[i].toString();
+            let btn = document.createElement('button');
+            btn.innerHTML = "叠加";
             btn.onclick = () => {
-                moveList[i] = Number(input.value)
+                moveList[i] = Number(input.value);
                 for (let key in this.keyDomList) {
                     if (!this.op.selectMultiKeyList.includes(key)) {
-                        continue
+                        continue;
                     }
-                    let keyData: BoardKeyType = this.boardData[key]
+                    let keyData: BoardKeyType = this.boardData[key];
                     if (!keyData.VIEW_RECT) {
-                        continue
+                        continue;
                     }
-                    let rect = keyData.VIEW_RECT.split(',').map(c => Number(c))
-                    console.log(rect.toString())
-                    rect[i] += moveList[i]
-                    console.log(rect.toString())
-                    keyData.VIEW_RECT = rect.join(",")
+                    let rect = keyData.VIEW_RECT.split(',').map(c => Number(c));
+                    console.log(rect.toString());
+                    rect[i] += moveList[i];
+                    console.log(rect.toString());
+                    keyData.VIEW_RECT = rect.join(",");
                 }
-                saveJson(this.boardUrl, this.boardData)
-                this.op.multiAdd = moveList.join(',')
-                this.saveOPJson()
-                this.reFreshPhoneSkin()
-            }
-            div.append(p, input, btn)
-            this.phoneCmdDiv.append(div)
+                saveJson(this.boardUrl, this.boardData);
+                this.op.multiAdd = moveList.join(',');
+                this.saveOPJson();
+                this.reFreshPhoneSkin();
+            };
+            div.append(p, input, btn);
+            this.phoneCmdDiv.append(div);
         }
     }
 }
