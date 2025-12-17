@@ -179,7 +179,7 @@ class JOPDiv {
             //@ts-expect-error
             const zip = new JSZip();
             for (let key of keys) {
-                if (key.startsWith(this.op.dirBase)) {
+                if (key.startsWith(this.op.dirBase+'/')) {
 
                     zip.file(key, jsonToIni(JSON.parse(localStorage[key])));
                 }
