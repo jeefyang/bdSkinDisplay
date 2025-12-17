@@ -32,6 +32,13 @@ class JOPDiv {
                     new JMain();
                 }
             },
+             {
+                name: "候选框设置", func: () => {
+                    this.op.opSwitchKey = "cand";
+                    this.saveOPJson();
+                    new JMain();
+                }
+            },
             {
                 name: "强制保存", func: () => {
                     this.saveOPJson();

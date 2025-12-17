@@ -3,12 +3,12 @@ class JBoardChildDom {
     /** 创建列表模式下元素 */
     createBoardListDom(this: JMain) {
         this.phoneCmdDiv.innerHTML = "";
-        let type = "LIST";
+        const type = "LIST";
         if (!this.boardData[type]) {
             return;
         }
 
-        let title = document.createElement("h3");
+        const title = document.createElement("h3");
         title.innerHTML = "列表数据";
         title.style.textAlign = "center";
         this.phoneCmdDiv.append(title);
@@ -51,6 +51,56 @@ class JBoardChildDom {
         ];
         for (let i = 0; i < inputList.length; i++) {
             let div = this.createChildDom({ data: inputList[i], baseData: this.boardData, saveUrl: this.boardUrl, type: type });
+            if (!div) {
+                continue;
+            }
+            this.phoneCmdDiv.append(div, document.createElement('br'));
+        }
+    }
+
+    /** 创建候选模式下元素 */
+    createBoradCandDom(this: JMain) {
+        this.phoneCmdDiv.innerHTML = "";
+        const type = "CAND";
+        if (!this.boardData[type]) {
+            return;
+        }
+
+        const title = document.createElement("h3");
+        title.innerHTML = "候选框数据";
+        title.style.textAlign = "center";
+        this.phoneCmdDiv.append(title);
+        let inputList: childDomType<keyof CndCandType>[] = [
+            { key: "BACK_STYLE", title: "候选栏背景样式:", tip: "只能一个", type: "style" },
+            { key: "FORE_STYLE", title: "候选字前景样式:", tip: "候选字字体,颜色样式", type: "style" },
+            { key: "CELL_STYLE", title: "候选条单元格样式:", tip: "分隔线,按下效果通过这个参数实现", type: "style" },
+            {
+                key: "PADDING", title: "候选内容显示与外边框的间距:", tip: `
+                4 个值分别代表示左边距,上边距,右边距,下边距\n@example PADDING=0,0,65,0 表示候选内容与外边框间距为：左边距 0,上边距 0,右边距 65,下边距 0,用于给 ICON留空间放置或优化候选内容显示
+                `
+            },
+            { key: "FIRST_GAP", title: "第一个候选字比其它候选字多的间隔:", tip: `第一个候选字仍距中显示` },
+            {
+                key: "FIRST_FORE", title: "第一个候选字前景（字体及颜色）样式:", tip: ``
+            },
+            {
+                key: "FIRST_BACK", title: "第一个候选字背景样式:", tip: ``
+            },
+            {
+                key: "ICON_NUM", title: "图标的数量:", tip: ``
+            },
+            {
+                key: "CELL_W", title: "候选字间距:", tip: ``
+            },
+            {
+                key: "MORE_W", title: "进入更多候选字的按钮空间:", tip: `为 0 则不需要此键`
+            },
+            {
+                key: "TIP_NUM", title: "补丁数量:", tip: `注：CAND 中的 ICON 同样支持状态补丁`
+            }
+        ];
+        for (let i = 0; i < inputList.length; i++) {
+            let div = this.createChildDom({ data: inputList[i], baseData: this.candData, saveUrl: this.candUrl, type: type });
             if (!div) {
                 continue;
             }

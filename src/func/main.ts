@@ -43,7 +43,7 @@ class JMain {
         /** 是否在有候选字时显示 */
         isPersist: false,
         /** 配置切换key */
-        opSwitchKey: <"list" | "key" | "multiKey">"list",
+        opSwitchKey: <"list" | "key" | "multiKey"|"cand">"list",
         /** 单选key */
         selectSingleKey: "",
         selectSingleType: <"icon" | "key">"key",
