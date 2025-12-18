@@ -483,7 +483,7 @@ class JFlow {
                 boxList.push(undefined);
                 continue;
             }
-            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, viewW: op.viewRectW, viewH: op.viewRectH });
+            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, fontweight:css.FONT_WEIGHT,viewW: op.viewRectW, viewH: op.viewRectH });
             op.div.append(p);
             boxList.push(p);
         }
