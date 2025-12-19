@@ -1,0 +1,9 @@
+﻿Name=FRAME | 智能深色
+Style=default
+Author=公众号：森林集
+SupportPlatform=A
+SkinFlags=1
+SkinType=1
+SupportDarkMode=1
+Abilities=Sound
+VersionCode=1
