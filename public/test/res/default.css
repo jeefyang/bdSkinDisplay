@@ -1,5 +1,5 @@
 [GLOBAL]
-STYLE_NUM=2000
+STYLE_NUM=2006
 
 [STYLE1]
 FONT_SIZE=50
@@ -75,9 +75,6 @@ INFO=设置LOGO
 [STYLE11]
 INFO=SWITCH
 
-
-
-
 [STYLE21]
 FONT_SIZE=70
 NM_COLOR=ffffff
@@ -99,23 +96,13 @@ HL_IMG=hint,2
 [STYLE25]
 NM_IMG=hint,3
 
-
-
-
 [STYLE200]
 SHOW=此面板制作中，敬请关注公众号《森林集》
 NM_COLOR=f75757
 FONT_SIZE=52
 BORDER_COLOR=AFFFFFFF
 BORDER_SIZE=1
-
-
 INFO=微信公众号----森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集
-
-INFO=文字前景 201-400
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集
-
 
 [STYLE401]
 SHOW=1
@@ -284,30 +271,26 @@ SHOW='
 NM_COLOR=f0f0f0
 HL_COLOR=ffffff
 FONT_SIZE=22
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集
-
-
 INFO=全选
+
 [STYLE501]
-
 INFO=剪切
+
 [STYLE502]
-
 INFO=复制
+
 [STYLE503]
-
 INFO=粘贴
+
 [STYLE504]
-
 INFO=窗格
+
 [STYLE505]
-
 INFO=段首
-[STYLE506]
 
+[STYLE506]
 INFO=段尾
+
 [STYLE507]
 
 [STYLE508]
@@ -351,10 +334,7 @@ SHOW=D
 NM_COLOR=f0f0f0
 HL_COLOR=ffffff
 FONT_SIZE=19
-
-
 INFO=微信公众号----森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集
-
 
 [STYLE601]
 NM_IMG=letter,1
@@ -459,10 +439,7 @@ HL_IMG=letter_p,25
 [STYLE626]
 NM_IMG=letter,26
 HL_IMG=letter_p,26
-
-
 INFO=微信公众号----森林集-森林集-森林集-森林集
-
 
 [STYLE653]
 NM_IMG=letter,53
@@ -591,12 +568,7 @@ HL_IMG=letter_p,83
 [STYLE684]
 NM_IMG=letter,84
 HL_IMG=letter_p,84
-
-
-
 INFO=微信公众号----森林集-森林集-森林集-森林集
-
-
 
 [STYLE701]
 NM_IMG=letter,27
@@ -701,64 +673,66 @@ HL_IMG=letter_p,51
 [STYLE726]
 NM_IMG=letter,52
 HL_IMG=letter_p,52
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集
-
-
-INFO=ANIM
 INFO=SHOW_ANIM=EVENT1=
+
 [STYLE801]
 PRESS_ANIM=1
+
 [STYLE802]
 PRESS_ANIM=51
+
 [STYLE803]
 PRESS_ANIM=101
+
 [STYLE804]
 PRESS_ANIM=151
 
 [STYLE805]
 PRESS_ANIM=201
+
 [STYLE806]
 PRESS_ANIM=251
+
 [STYLE807]
 PRESS_ANIM=301
+
 [STYLE808]
 PRESS_ANIM=351
 
 [STYLE809]
 SHOW_ANIM=401
+
 [STYLE810]
 SHOW_ANIM=421
+
 [STYLE811]
 SHOW_ANIM=441
+
 [STYLE812]
 SHOW_ANIM=461
+
 [STYLE813]
 SHOW_ANIM=481
+
 [STYLE814]
 SHOW_ANIM=501
+
 [STYLE815]
 SHOW_ANIM=521
 
 [STYLE816]
 PRESS_ANIM=541
+
 [STYLE817]
 PRESS_ANIM=561
+
 [STYLE818]
 PRESS_ANIM=581
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集
-
-
-INFO=按键音
 INFO=PANEL_SHOW_SOUND_PATH=qd.ogg_aj.aiff
+
 [STYLE1001]
 PRESS_SOUND_PATH=aj.ogg
-
-
 INFO=微信公众号----森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集
-
 
 [STYLE1101]
 NM_IMG=bj,1
@@ -771,12 +745,8 @@ HL_IMG=bj,2
 [STYLE1103]
 NM_IMG=bj,3
 HL_IMG=bj,3
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集
-
-
 INFO=按键
+
 [STYLE1201]
 HL_IMG=sym,11
 
@@ -823,12 +793,8 @@ HL_IMG=anjian,20
 [STYLE1212]
 NM_IMG=anjian,21
 HL_IMG=anjian,22
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集
-
-
 INFO=CAND
+
 [STYLE1301]
 NM_IMG=cand,1
 HL_IMG=cand2,1
@@ -872,21 +838,13 @@ HL_IMG=cand2,10
 [STYLE1311]
 NM_IMG=cand,11
 HL_IMG=cand2,11
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集
-
-
 INFO=help
+
 [STYLE1401]
 NM_IMG=help,1
 HL_IMG=help,1
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集
-
-
 INFO=SEL SYM
+
 [STYLE1501]
 NM_IMG=sym,1
 HL_IMG=sym2,1
@@ -926,11 +884,8 @@ HL_IMG=sym2,9
 [STYLE1510]
 NM_IMG=sym,10
 HL_IMG=sym2,10
-
-
-
-
 INFO=小图标
+
 [STYLE1520]
 NM_IMG=sym,12
 HL_IMG=sym2,12
@@ -962,42 +917,70 @@ HL_IMG=sym2,18
 [STYLE1527]
 NM_IMG=sym,19
 HL_IMG=sym2,19
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集
-
-
-INFO=VOICE  1601-1620
-
-
 INFO=SPARE
+
 [STYLE1621]
-NM_IMG=slj,1
-HL_IMG=slj2,1
+NM_IMG=
+HL_IMG=
+NM_COLOR=865e09
+HL_COLOR=c29a44
+SHOW=全选
+FONT_SIZE=33
+FONT_WEIGHT=500
 
 [STYLE1622]
-NM_IMG=slj,2
-HL_IMG=slj2,2
+NM_IMG=
+HL_IMG=
+NM_COLOR=865e09
+HL_COLOR=c29a44
+SHOW=剪切
+FONT_SIZE=33
+FONT_WEIGHT=500
 
 [STYLE1623]
-NM_IMG=slj,3
-HL_IMG=slj2,3
+NM_IMG=
+HL_IMG=
+NM_COLOR=865e09
+HL_COLOR=c29a44
+FONT_SIZE=33
+FONT_WEIGHT=500
+SHOW=复制
 
 [STYLE1624]
-NM_IMG=slj,4
-HL_IMG=slj2,4
+NM_IMG=
+HL_IMG=
+NM_COLOR=865e09
+HL_COLOR=c29a44
+FONT_SIZE=33
+FONT_WEIGHT=500
+SHOW=粘贴
 
 [STYLE1625]
-NM_IMG=slj,5
-HL_IMG=slj2,5
+NM_IMG=
+HL_IMG=
+NM_COLOR=865e09
+HL_COLOR=c29a44
+FONT_SIZE=33
+FONT_WEIGHT=500
+SHOW=段首
 
 [STYLE1626]
-NM_IMG=slj,6
-HL_IMG=slj2,6
+NM_IMG=
+HL_IMG=
+NM_COLOR=865e09
+HL_COLOR=c29a44
+FONT_SIZE=33
+FONT_WEIGHT=500
+SHOW=段尾
 
 [STYLE1627]
-NM_IMG=slj,7
-HL_IMG=slj2,7
+NM_IMG=
+HL_IMG=
+NM_COLOR=865e09
+HL_COLOR=c29a44
+FONT_SIZE=33
+FONT_WEIGHT=500
+SHOW=tab
 
 [STYLE1628]
 NM_IMG=slj,8
@@ -1050,12 +1033,8 @@ HL_IMG=slj2,19
 [STYLE1640]
 NM_IMG=slj,20
 HL_IMG=slj2,20
-
-
-INFO=微信公众号----森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集-森林集
-
-
 INFO=MORE
+
 [STYLE1701]
 NM_IMG=more,1
 HL_IMG=more2,1
@@ -1143,4 +1122,40 @@ HL_IMG=more2,21
 [STYLE1722]
 NM_IMG=more,22
 HL_IMG=more2,22
+
+[STYLE2705]
+NM_COLOR=ffffff
+HL_COLOR=ffffff
+SHOW=隐藏
+FONT_SIZE=22
+
+[STYLE2706]
+NM_COLOR=ffffff
+HL_COLOR=ffffff
+SHOW=候选
+FONT_SIZE=22
+
+[STYLE2707]
+NM_COLOR=ffffff
+HL_COLOR=ffffff
+SHOW=数字
+FONT_SIZE=22
+
+[STYLE2708]
+NM_COLOR=ffffff
+HL_COLOR=ffffff
+SHOW=符号
+FONT_SIZE=22
+
+[STYLE2709]
+NM_COLOR=ffffff
+HL_COLOR=ffffff
+SHOW=返回
+FONT_SIZE=22
+
+[STYLE2710]
+NM_COLOR=ffffff
+HL_COLOR=ffffff
+SHOW=大小写
+FONT_SIZE=22
 
