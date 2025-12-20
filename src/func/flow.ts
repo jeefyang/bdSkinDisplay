@@ -16,7 +16,10 @@ class JFlow {
 
     /** 初始化数据 */
     initData(this: JMain) {
-        this.op = this.loadOPJson() || this.op;
+        const cacheJson = this.loadOPJson() || {};
+        Object.keys(cacheJson).forEach(key => {
+            this.op[key] = cacheJson[key];
+        });
         this.moveDiv = <HTMLDivElement>document.getElementsByClassName("moveDiv")[0];
         this.cmdDiv = <HTMLDivElement>document.getElementsByClassName("cmd")[0];
         this.phoneDiv = <HTMLDivElement>document.getElementsByClassName("phoneDisplay")[0];
@@ -483,7 +486,7 @@ class JFlow {
                 boxList.push(undefined);
                 continue;
             }
-            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, fontweight:css.FONT_WEIGHT,viewW: op.viewRectW, viewH: op.viewRectH });
+            let p = this.getPEle({ pos: pos || [0, 0], show: css.SHOW, color: colorList[i], fontSize: css.FONT_SIZE, fontweight: css.FONT_WEIGHT, viewW: op.viewRectW, viewH: op.viewRectH });
             op.div.append(p);
             boxList.push(p);
         }

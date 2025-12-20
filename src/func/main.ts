@@ -22,6 +22,8 @@ class JMain {
     op = {
         /** 缩放 */
         phoneScale: 0.3,
+        /** 皮肤框右距边距 */
+        skinBoxMarginRight:10,
         /** 手机宽度 */
         phoneWidth: 1414,
         /** 手机高度 */

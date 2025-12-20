@@ -5,10 +5,9 @@ class JAction {
         !w && (w = this.op.phoneWidth);
         !h && (h = this.op.phoneHeight);
         !scale && (scale = this.op.phoneScale);
-        this.phoneDiv.style.width = w + "px";
+        this.phoneDiv.style.width = (w + (this.op.skinBoxMarginRight / scale)) + "px";
         this.phoneDiv.style.height = h + "px";
         this.cmdDiv.style.height = (h * scale) + "px";
-        //@ts-ignore
         this.phoneDiv.style.zoom = scale.toString();
         this.op.phoneWidth = w;
         this.op.phoneHeight = h;

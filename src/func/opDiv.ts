@@ -3,6 +3,7 @@ class JOPDiv {
     /** 创建配置div */
     createOPDiv(this: JMain) {
         this.createScaleDiv();
+        this.createSkinBoxMarginRightDiv();
         this.createSelectHLKeyDiv();
         this.createCandSelectDiv();
         let btnDiv = document.createElement("button");
@@ -32,7 +33,7 @@ class JOPDiv {
                     new JMain();
                 }
             },
-             {
+            {
                 name: "候选框设置", func: () => {
                     this.op.opSwitchKey = "cand";
                     this.saveOPJson();
@@ -153,6 +154,38 @@ class JOPDiv {
         div.append(p, scroll, input);
         this.phoneOPDiv.append(div);
     }
+    /** 创建皮肤框距边div */
+    createSkinBoxMarginRightDiv(this: JMain) {
+        let div = document.createElement("div");
+        div.setAttribute("class", "SkinBoxMarginRightDiv");
+        let p = document.createElement("label");
+        p.innerHTML = "皮肤框距边:";
+        let scroll = document.createElement("input");
+        scroll.setAttribute("type", "range");
+        scroll.min = (1).toString();
+        scroll.max = (1000).toString();
+        scroll.step = (1).toString();
+        scroll.value = this.op.skinBoxMarginRight.toString();
+        let input = document.createElement("input");
+        input.value = this.op.skinBoxMarginRight.toString();
+        input.style.width = 100 + 'px';
+        scroll.addEventListener("input", (e) => {
+            input.value = scroll.value;
+            this.op.skinBoxMarginRight = Number(scroll.value);
+            this.setPhoneDivSize();
+            this.setMoveDivPos();
+            this.saveOPJson();
+        });
+        input.addEventListener("change", (e) => {
+            scroll.value = input.value;
+            this.op.skinBoxMarginRight = Number(scroll.value);
+            this.setPhoneDivSize();
+            this.setMoveDivPos();
+            this.saveOPJson();
+        });
+        div.append(p, scroll, input);
+        this.phoneOPDiv.append(div);
+    }
 
     /** 创建文件div */
     creatFileDiv(this: JMain) {
@@ -179,7 +212,7 @@ class JOPDiv {
             //@ts-expect-error
             const zip = new JSZip();
             for (let key of keys) {
-                if (key.startsWith(this.op.dirBase+'/')) {
+                if (key.startsWith(this.op.dirBase + '/')) {
 
                     zip.file(key, jsonToIni(JSON.parse(localStorage[key])));
                 }
