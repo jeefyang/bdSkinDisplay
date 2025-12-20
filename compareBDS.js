@@ -78,8 +78,8 @@ if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
 
 // 如果输出路径没有后缀，自动添加 .zip
 if (!path.extname(outputPath)) {
-    outputPath += '.zip';
-    console.log(`输出路径无后缀，自动添加 .zip → ${outputPath}`);
+    outputPath += '.bds';
+    console.log(`输出路径无后缀，自动添加 .bds → ${outputPath}`);
 }
 
 zipFolder(sourceDir, outputPath).catch(err => {
