@@ -152,7 +152,7 @@ class JBoardChildDom {
             { key: "FORE_STYLE", title: "按键前景指定样式:", tip: "允许多个前景,前景间用英文逗号分隔\nFORE_STYLE=1,88,200\n表示此键有 1,88,200 三个前景", type: "style" },
             { key: "POS_TYPE", title: "偏移:", tip: "此参数和前景对应,一个参数对应一个前景,同样以英文逗号分隔,表示前景的偏移类型,序号和 gen.ini 中的[OFFSET*]的序号对应,如果无对应值则为 0,表示不偏移,居中对齐(下面的表格会提到 OFFSET 属性,已用阴影填充加强显示)\nFORE_STYLE=1,88,200\nPOS_TYPE=0,2,10\n表示前景 1,距中显示；前景 88 使用2 号偏移；前景 200 使用 10 号偏移（序号由 gen.ini 生成）", type: "offset" },
             { key: "VIEW_RECT", title: "坐标:", tip: "按键绘制时的坐标 X,Y 及宽 W,高 H\nVIEW_RECT=45,3,60,70\n在 PANAL 面板(45,3)处绘制一个宽60 高 70 的键", isNotTipAttr: true },
-            { key: "TOUCH_RECT", title: "按键点击范围补丁:", tip: "控制该键的实际点击位置X,Y 和宽 W,高 H\n当 TOUCH_RECT=0,0,0,0 或宽,高为 0 时,表示此键不可点击（常用做背景显示功能）\nVIEW_RECT=45,3,60,70\nTOUCH_RECT=43,0,66,72\n表示此键的实际点击范围是(43,0)处宽 66 高 72 的矩阵." },
+            { key: "TOUCH_RECT", title: "按键点击范围补丁:", tip: "控制该键的实际点击位置X,Y 和宽 W,高 H\n当 TOUCH_RECT=0,0,0,0 或宽,高为 0 时,表示此键不可点击（常用做背景显示功能）\nVIEW_RECT=45,3,60,70\nTOUCH_RECT=43,0,66,72\n表示此键的实际点击范围是(43,0)处宽 66 高 72 的矩阵.", isNotTipAttr: true },
             { key: "UP", title: "向上划:", type: "key" },
             { key: "DOWN", title: "向下划:", type: "key" },
             { key: "LEFT", title: "向左划:", type: "key" },
@@ -214,7 +214,7 @@ class JBoardChildDom {
         let inputList: childDomType<keyof CndIconType>[] = [
             { key: "BACK_STYLE", title: "图标背景样式:", type: "style" },
             { key: "FORE_STYLE", title: "图标前景样式:", type: "style" },
-            { key: "SIZE", title: "图标大小:", tip: "（宽,高）\nSIZE=45,60\n自己测试过,这里一般不指拉伸,指居中" },
+            { key: "SIZE", title: "图标大小:", tip: "（宽,高）\nSIZE=45,60\n自己测试过,这里一般不指拉伸,指居中", isNotTipAttr: true },
             { key: "KEY", title: "按下后执行的操作", tip: "注：ICON 不支持点划操作,不支持输出字符和输入码（1,2,3,4 除外,会自动转换成光标移动功能,例 KEY=1）\nKEY=F31\n按下后执行 F31（logo 菜单）", type: "key" },
             {
                 key: "ANCHOR_TYPE", title: "锚点类型", tip: "1～9 分别代表 CAND 矩阵内的 9 个点,以这些点为原点.\nANCHOR_TYPE=5\n以 CAND 正中心为原点(0,0),之所以附加这么多的锚点类型是为了 ICON 的精确定位", type: "select", select: [
@@ -229,7 +229,7 @@ class JBoardChildDom {
                     { name: "9 右下角", value: 9 },
                 ]
             },
-            { key: "POS", title: "偏移", tip: "以 ANCHOR_TYPE 锚点类型为原点\n（0,0）,ICON 左上角相对此点的偏移\nANCHOR_TYPE=5\nPOS=-60,-20\n以类型 5 为原点,向左偏移 60,向上偏移 20（向右向下为增）" },
+            { key: "POS", title: "偏移", tip: "以 ANCHOR_TYPE 锚点类型为原点\n（0,0）,ICON 左上角相对此点的偏移\nANCHOR_TYPE=5\nPOS=-60,-20\n以类型 5 为原点,向左偏移 60,向上偏移 20（向右向下为增）" , isNotTipAttr: true},
             {
                 key: "PERSIST", title: "此图标是否在有候选字时显示:", type: "select", select: [
                     { name: "都不显示", value: "0" },
