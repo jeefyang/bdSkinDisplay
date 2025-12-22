@@ -143,13 +143,15 @@ class JBoardChildDom {
             this.saveOPJson();
             new JMain();
         });
-        titleDiv.append(titleDiv_Label, titleDiv_Input);
+        const curKeyLabel = document.createElement("label");
+        curKeyLabel.innerHTML = "当前按键:" + this.getFinalKey(this.op.selectSingleKey);
+        titleDiv.append(titleDiv_Label, titleDiv_Input, curKeyLabel);
         this.phoneCmdDiv.append(titleDiv);
         let inputList: childDomType<keyof BoardKeyType>[] = [
             { key: "BACK_STYLE", title: "按键背景指定样式:", type: "style" },
             { key: "FORE_STYLE", title: "按键前景指定样式:", tip: "允许多个前景,前景间用英文逗号分隔\nFORE_STYLE=1,88,200\n表示此键有 1,88,200 三个前景", type: "style" },
             { key: "POS_TYPE", title: "偏移:", tip: "此参数和前景对应,一个参数对应一个前景,同样以英文逗号分隔,表示前景的偏移类型,序号和 gen.ini 中的[OFFSET*]的序号对应,如果无对应值则为 0,表示不偏移,居中对齐(下面的表格会提到 OFFSET 属性,已用阴影填充加强显示)\nFORE_STYLE=1,88,200\nPOS_TYPE=0,2,10\n表示前景 1,距中显示；前景 88 使用2 号偏移；前景 200 使用 10 号偏移（序号由 gen.ini 生成）", type: "offset" },
-            { key: "VIEW_RECT", title: "坐标:", tip: "按键绘制时的坐标 X,Y 及宽 W,高 H\nVIEW_RECT=45,3,60,70\n在 PANAL 面板(45,3)处绘制一个宽60 高 70 的键" },
+            { key: "VIEW_RECT", title: "坐标:", tip: "按键绘制时的坐标 X,Y 及宽 W,高 H\nVIEW_RECT=45,3,60,70\n在 PANAL 面板(45,3)处绘制一个宽60 高 70 的键", isNotTipAttr: true },
             { key: "TOUCH_RECT", title: "按键点击范围补丁:", tip: "控制该键的实际点击位置X,Y 和宽 W,高 H\n当 TOUCH_RECT=0,0,0,0 或宽,高为 0 时,表示此键不可点击（常用做背景显示功能）\nVIEW_RECT=45,3,60,70\nTOUCH_RECT=43,0,66,72\n表示此键的实际点击范围是(43,0)处宽 66 高 72 的矩阵." },
             { key: "UP", title: "向上划:", type: "key" },
             { key: "DOWN", title: "向下划:", type: "key" },
@@ -159,7 +161,7 @@ class JBoardChildDom {
             { key: "SHOW", title: "直接点击后传给内核的键值:", tip: "SHOW 的作用：向内核反馈点击此键后的键值,供内核判断该键类型.能在输入码上回馈键值." },
             { key: "HOLD", title: "长按:", tip: "长按后对应的字符或功能\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLD=F1\n按住为 F1 打开符号面板\n注：HOLD=字符时,此字符会参与输入码." },
             { key: "HOLDSYM", title: "长按后对应的字符集:", tip: "（字符之间无分隔符）,以字符形式直接输出\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLDSYM=ABCD@#\n表示长按对应的字符集是 ABCD@#\n然后通过手势选择字符,字符间无间隔.\n当 HOLDSYM=单字符时,表示此字符直接上屏." },
-            { key: "STAT_STYLE", title: "针对特殊状态时的显示及样式及功能:", tip: "（状态补丁）\nS 代表状态类型,_后的数字表示 TIP 序号\n（详见 S 状态定义）\n当有多个状态时,状态之间用“|”间隔\nSTAT_STYLE=S4_1|S14_2\n表示 S4（有输入码状态）时,执行[TIP1]补丁,使该键在显示或功能上发生改变.在 S14（中文临时英文输入状态）时,执行[TIP2]" },
+            { key: "STAT_STYLE", title: "针对特殊状态时的显示及样式及功能:", tip: "（状态补丁）\nS 代表状态类型,_后的数字表示 TIP 序号\n（详见 S 状态定义）\n当有多个状态时,状态之间用“|”间隔\nSTAT_STYLE=S4_1|S14_2\n表示 S4（有输入码状态）时,执行[TIP1]补丁,使该键在显示或功能上发生改变.在 S14（中文临时英文输入状态）时,执行[TIP2]", type: "speicalKey", isNotTipAttr: true },
             { key: "SPACE_VOICE_XY", title: "空格_语音_坐标:", tip: "(5.15+版新功能)\n长按空格语音图标的坐标定位,原点在空格按键矩阵的左上角\nSPACE_VOICE_XY=200,40" }
         ];
         for (let i = 0; i < inputList.length; i++) {
@@ -202,7 +204,9 @@ class JBoardChildDom {
             this.saveOPJson();
             new JMain();
         });
-        titleDiv.append(titleDiv_Label, titleDiv_Input);
+        const curKeyLabel = document.createElement("label");
+        curKeyLabel.innerHTML = "当前按键:" + this.getFinalKey(this.op.selectSingleKey);
+        titleDiv.append(titleDiv_Label, titleDiv_Input, curKeyLabel);
         this.phoneCmdDiv.append(titleDiv);
         if (!this.op.selectSingleKey) {
             return;
@@ -234,7 +238,7 @@ class JBoardChildDom {
                     { name: "有无候选字时都显示", value: "3" },
                 ]
             },
-            { key: "STAT_STYLE", title: "状态补丁", tip: "针对特殊状态时的显示及样式及功能\nS 代表状态类型,_后的数字表示 TIP序号（详见 S 状态定义）\n当有多个状态时,状态之间用“|”间隔\nSTAT_STYLE=S9_1\n当处在 S9（中文联想状态）时,执行[TIP1]" }
+            { key: "STAT_STYLE", title: "状态补丁:", tip: "针对特殊状态时的显示及样式及功能\nS 代表状态类型,_后的数字表示 TIP序号（详见 S 状态定义）\n当有多个状态时,状态之间用“|”间隔\nSTAT_STYLE=S9_1\n当处在 S9（中文联想状态）时,执行[TIP1]", type: "speicalKey", isNotTipAttr: true }
         ];
         for (let i = 0; i < inputList.length; i++) {
             let div = this.createChildDom({ data: inputList[i], baseData: this.candData, saveUrl: this.candUrl, type: this.op.selectSingleKey });

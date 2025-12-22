@@ -97,7 +97,7 @@ class JFlow {
         }
         for (let key in this.boardData) {
             if (key.includes("KEY")) {
-                await this.decodeBoard_Key(this.boardData[key], key);
+                await this.decodeBoard_Key(key);
             }
             if (key == "LIST") {
                 listName = key;
@@ -138,26 +138,28 @@ class JFlow {
 
 
     /** 解析键盘图标样式 */
-    async decodeBoard_IconStyle(this: JMain, op: { data: CndIconType, div: HTMLDivElement, handlerDiv: HTMLDivElement, rectW: number, rectH: number, keyName: string; }) {
-
+    async decodeBoard_IconStyle(this: JMain, op: { div: HTMLDivElement, handlerDiv: HTMLDivElement, rectW: number, rectH: number, keyName: string; }) {
+        const data = this.candData[op.keyName];
+        const forceKey = this.getFinalKey(op.keyName);
+        const curData: BoardTipType | CndIconType = this.candData[forceKey] || data;
         this.keyDomList[op.keyName] = {
             name: op.keyName, dom: op.div, handlerDom: op.handlerDiv, type: "icon"
         };
         // 无候选
-        if (op.data.PERSIST == "1" && this.op.isPersist) {
+        if (data.PERSIST == "1" && this.op.isPersist) {
             return;
         }
         // 有候选
-        if (op.data.PERSIST == "2" && !this.op.isPersist) {
+        if (data.PERSIST == "2" && !this.op.isPersist) {
             return;
         }
         // 都不显示
-        if (op.data.PERSIST == "0") {
+        if (data.PERSIST == "0") {
             return;
         }
-        let size: number[] = (op.data.SIZE || "").split(",").map(c => Number(c));
-        let styleList = [op.data.BACK_STYLE, ...(op.data.FORE_STYLE || "").split(",")];
-        let pos = (op.data.POS || "").split(",").map(c => Number(c));
+        let size: number[] = (data.SIZE || "").split(",").map(c => Number(c));
+        let styleList = [curData.BACK_STYLE, ...(curData.FORE_STYLE || "").split(",")];
+        let pos = (data.POS || "").split(",").map(c => Number(c));
         let minX = Infinity;
         let minY = Infinity;
         let maxX = -Infinity;
@@ -217,8 +219,8 @@ class JFlow {
                         offsetX += (size[0] - w) / 2;
                         offsetY += (size[1] - h) / 2;
                     }
-                    offsetX += (() => { return [op.rectW, 0, op.rectW / 2]; })()[Number(op.data.ANCHOR_TYPE || 1) % 3];
-                    offsetY += (() => { return [0, op.rectH / 2, op.rectH]; })()[Math.floor((Number(op.data.ANCHOR_TYPE || 1) - 1) / 3)];
+                    offsetX += (() => { return [op.rectW, 0, op.rectW / 2]; })()[Number(data.ANCHOR_TYPE || 1) % 3];
+                    offsetY += (() => { return [0, op.rectH / 2, op.rectH]; })()[Math.floor((Number(data.ANCHOR_TYPE || 1) - 1) / 3)];
                     offsetX += pos[0] || 0;
                     offsetY += pos[1] || 0;
                     img.style.width = w + "px";
@@ -297,8 +299,7 @@ class JFlow {
         }
         for (let key in this.candData) {
             if (key.includes("ICON")) {
-                let icon: CndIconType = this.candData[key];
-                await this.decodeBoard_IconStyle({ data: icon, div, handlerDiv, rectW, rectH, keyName: key });
+                await this.decodeBoard_IconStyle({ div, handlerDiv, rectW, rectH, keyName: key });
             }
         }
         this.phoneCandDiv.append(handlerDiv);
@@ -502,10 +503,17 @@ class JFlow {
     }
 
     /** 解析键盘key */
-    async decodeBoard_Key(this: JMain, data: BoardKeyType, keyName: string) {
+    async decodeBoard_Key(this: JMain, keyName: string) {
+        const data: BoardKeyType = this.boardData[keyName];
         if (!data.VIEW_RECT) {
             return;
         }
+        const forceKey = this.getFinalKey(keyName);
+        let tipData: BoardTipType | null = null;
+        if (keyName != forceKey) {
+            tipData = this.boardData[forceKey];
+        }
+        const curData = tipData || data;
         let rect = data.VIEW_RECT.split(",");
         let rectX = Number(rect[0]);
         let rectY = Number(rect[1]);
@@ -520,12 +528,12 @@ class JFlow {
         div.style.textAlign = "center";
         let handlerDiv = document.createElement("div");
 
-        if (data.BACK_STYLE) {
+        if (curData.BACK_STYLE) {
             await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, w: rectW, h: rectH, div, style: data.BACK_STYLE, handlerDiv, keyName, isBack: true });
         }
-        if (data.FORE_STYLE) {
-            let pos = (data.POS_TYPE || "").split(",");
-            let list = data.FORE_STYLE.split(',');
+        if (curData.FORE_STYLE) {
+            let pos = (curData.POS_TYPE || "").split(",");
+            let list = curData.FORE_STYLE.split(',');
             for (let i = 0; i < list.length; i++) {
                 await this.decodeBoard_ImgStyle({ viewRectW: rectW, viewRectH: rectH, div, style: list[i], pos_Type: pos[i], handlerDiv, keyName });
             }

@@ -6,6 +6,8 @@ class JOPDiv {
         this.createSkinBoxMarginRightDiv();
         this.createSelectHLKeyDiv();
         this.createCandSelectDiv();
+        this.createStatusSwitch();
+        this.createStatusTurn();
         let btnDiv = document.createElement("button");
         btnDiv.setAttribute("class", "btnDiv");
         let btnList: { name: string, func: () => void; }[] = [
@@ -83,6 +85,76 @@ class JOPDiv {
         input.checked = this.op.isPersist;
         input.addEventListener("change", () => {
             this.op.isPersist = input.checked;
+            this.saveOPJson();
+            new JMain();
+        });
+        div.append(p, input);
+        this.phoneOPDiv.append(div);
+    }
+
+    /** 创建状态切换 */
+    createStatusSwitch(this: JMain) {
+        let div = document.createElement("div");
+        let p = document.createElement("label");
+        p.innerHTML = "当前状态:";
+        let input = document.createElement("input");
+        input.value = this.op.curStatus;
+        input.addEventListener("change", () => {
+            this.op.curStatus = input.value;
+            this.saveOPJson();
+            new JMain();
+        });
+        div.append(p, input);
+
+        let btn = document.createElement("button");
+        btn.innerHTML = "特殊按键";
+        div.append(btn);
+
+        btn.onclick = () => {
+            let backDiv = document.createElement("div");
+            document.body.append(backDiv);
+            backDiv.setAttribute("class", "specialKey");
+            backDiv.onclick = () => {
+                backDiv.remove();
+            };
+            let formDiv = document.createElement("div");
+            backDiv.append(formDiv);
+            let count = 30;
+            let table: HTMLTableElement;
+            let tr: HTMLTableRowElement;
+            for (let i = 0; i < this.statusDescList.length; i++) {
+                if (i % count == 0) {
+                    table = document.createElement("table");
+                    formDiv.append(table);
+                }
+                let tr = document.createElement("tr");
+                let tdV = document.createElement("td");
+                tdV.innerHTML = `<a class="form_a" href="#">${this.statusDescList[i].v}</a>`;
+                let tdD = document.createElement("td");
+                tdD.innerHTML = `<a class="form_a" href="#">${this.statusDescList[i].d}</a>`;
+                tdV.onclick = tdD.onclick = () => {
+                    input.value = this.statusDescList[i].v;
+                    this.op.curStatus = input.value;
+                    this.saveOPJson();
+                    new JMain();
+                };
+                tr.append(tdV, tdD);
+                table.append(tr);
+            }
+        };
+        this.phoneOPDiv.append(div);
+    }
+
+    /** 创建状态开关 */
+    createStatusTurn(this: JMain) {
+        let div = document.createElement("div");
+        let p = document.createElement("label");
+        p.innerHTML = "状态开关:";
+        let input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = this.op.isStatus;
+        input.addEventListener("change", () => {
+            this.op.isStatus = input.checked;
             this.saveOPJson();
             new JMain();
         });
