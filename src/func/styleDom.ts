@@ -1,19 +1,19 @@
 /** 创建样式的元素 */
 function createStyleDom(this: JMain, op: {
-    styleCount: string
+    styleCount: string;
 }) {
-    let div = document.createElement("div")
-    let styleName = `STYLE${op.styleCount}`
+    let div = document.createElement("div");
+    let styleName = `STYLE${op.styleCount}`;
     if (!this.cssData[styleName]) {
-        let check = window.confirm(`样式 ${styleName} 数据并不存在,需要创建吗`)
+        let check = window.confirm(`样式 ${styleName} 数据并不存在,需要创建吗`);
         if (check) {
-            this.cssData[styleName] = {}
-            let g: CssGlobalType = this.cssData["GLOBAL"]
-            g.STYLE_NUM = (Number(g.STYLE_NUM) + 1).toString()
-            saveJson(this.cssUrl, this.cssData)
-            return this.createStyleDom({ styleCount: op.styleCount })
+            this.cssData[styleName] = {};
+            let g: CssGlobalType = this.cssData["GLOBAL"];
+            g.STYLE_NUM = (Number(g.STYLE_NUM) + 1).toString();
+            saveJson(this.cssUrl, this.cssData);
+            return this.createStyleDom({ styleCount: op.styleCount });
         }
-        return
+        return;
     }
     let list: childDomType<keyof CssStyleType>[] = [
         {
@@ -67,51 +67,65 @@ function createStyleDom(this: JMain, op: {
             title: "默认字体宽度",
         },
         {
-            title: "复制样式",
+            title: "样式复制到",
             type: "fn",
             fn: (v) => {
-                let otherStyleName = `STYLE${v}`
+                let otherStyleName = `STYLE${v}`;
                 if (!this.cssData[otherStyleName]) {
-                    let g: CssGlobalType = this.cssData["GLOBAL"]
-                    g.STYLE_NUM = (Number(g.STYLE_NUM) + 1).toString()
+                    let g: CssGlobalType = this.cssData["GLOBAL"];
+                    g.STYLE_NUM = (Number(g.STYLE_NUM) + 1).toString();
                 }
-                this.cssData[otherStyleName] = JSON.parse(JSON.stringify(this.cssData[styleName]))
-                saveJson(this.cssUrl, this.cssData)
-                new JMain()
+                this.cssData[otherStyleName] = JSON.parse(JSON.stringify(this.cssData[styleName]));
+                saveJson(this.cssUrl, this.cssData);
+                new JMain();
+            }
+        },
+        {
+            title: "复制样式从",
+            type: "fn",
+            fn: (v) => {
+                let otherStyleName = `STYLE${v}`;
+                if (!this.cssData[otherStyleName]) {
+                    alert(`样式 ${otherStyleName} 数据并不存在`);
+                    return;
+                }
+                this.cssData[styleName] = JSON.parse(JSON.stringify(this.cssData[otherStyleName]));
+                saveJson(this.cssUrl, this.cssData);
+                new JMain();
             }
         }
 
-    ]
+    ];
     for (let i = 0; i < list.length; i++) {
-        let childDiv = this.createChildDom({ data: list[i], type: styleName, baseData: this.cssData, saveUrl: this.cssUrl })
-        div.append(childDiv!)
+        let childDiv = this.createChildDom({ data: list[i], type: styleName, baseData: this.cssData, saveUrl: this.cssUrl });
+        div.append(childDiv!);
     }
-    return div
+    return div;
 }
 
 /** 创建偏移的元素 */
 function createOffsetDom(this: JMain, op: {
-    offsetCount: string
+    offsetCount: string;
 }) {
-    let div = document.createElement("div")
-    let offsetName = `OFFSET${op.offsetCount}`
+    let div = document.createElement("div");
+    let offsetName = `OFFSET${op.offsetCount}`;
     if (!this.genData[offsetName]) {
-        let check = window.confirm(`偏移 ${offsetName} 数据并不存在,需要创建吗`)
+        let check = window.confirm(`偏移 ${offsetName} 数据并不存在,需要创建吗`);
         if (check) {
-            this.genData[offsetName] = {}
-            let g: BoardPanelType = this.genData["PANEL"]
-            g.OFFSET_NUM = (Number(g.OFFSET_NUM) + 1).toString()
-            saveJson(this.genUrl, this.genData)
-            return this.createOffsetDom({ offsetCount: op.offsetCount })
+            this.genData[offsetName] = {};
+            let g: BoardPanelType = this.genData["PANEL"];
+            g.OFFSET_NUM = (Number(g.OFFSET_NUM) + 1).toString();
+            saveJson(this.genUrl, this.genData);
+            return this.createOffsetDom({ offsetCount: op.offsetCount });
         }
-        return
+        return;
     }
     let list: childDomType<keyof BoardOffsetType>[] = [
         { key: "POS", title: "偏移坐标:", tip: "自身矩阵中心点相对目标矩阵中心点的偏移量.（针对按键前景生效）目标矩阵的中心点：按键的正中心在主面板调用时,由属性 POS_TYPE 调用\n自身矩阵中心点相对目标矩阵中心点的偏移量.（针对按键前景生效）目标矩阵的中心点：按键的正中心" }
-    ]
+    ];
     for (let i = 0; i < list.length; i++) {
-        let childDiv = this.createChildDom({ data: list[i], type: offsetName, baseData: this.genData, saveUrl: this.genUrl })
-        div.append(childDiv!)
+        let childDiv = this.createChildDom({ data: list[i], type: offsetName, baseData: this.genData, saveUrl: this.genUrl });
+        div.append(childDiv!);
     }
-    return div
+    return div;
 }
