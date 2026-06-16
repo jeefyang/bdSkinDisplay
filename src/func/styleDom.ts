@@ -84,7 +84,7 @@ function createStyleDom(this: JMain, op: {
     ]
     for (let i = 0; i < list.length; i++) {
         let childDiv = this.createChildDom({ data: list[i], type: styleName, baseData: this.cssData, saveUrl: this.cssUrl })
-        div.append(childDiv)
+        div.append(childDiv!)
     }
     return div
 }
@@ -111,7 +111,7 @@ function createOffsetDom(this: JMain, op: {
     ]
     for (let i = 0; i < list.length; i++) {
         let childDiv = this.createChildDom({ data: list[i], type: offsetName, baseData: this.genData, saveUrl: this.genUrl })
-        div.append(childDiv)
+        div.append(childDiv!)
     }
     return div
 }

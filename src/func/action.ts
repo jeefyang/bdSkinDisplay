@@ -183,7 +183,7 @@ class JAction {
     async checkCss(this: JMain) {
         for (let key in this.cssData) {
             let css: CssStyleType = this.cssData[key];
-            let imgTagList: string[] = [css.NM_IMG, css.HL_IMG];
+            let imgTagList: string[] = [css.NM_IMG!, css.HL_IMG!];
             for (let i = 0; i < imgTagList.length; i++) {
                 if (!imgTagList[i]) {
                     continue;
@@ -210,12 +210,7 @@ class JAction {
         return loadJson(this.phoneOPKey);
     }
 
-    /** 触发键盘key的事件 */
-    dispatchKeyEvent(this: JMain, op: {
-        key: string, dom: HTMLElement,
-        handlerDom: HTMLElement,
-        type: "key" | "icon";
-    }) {
+    singleDispatchKey(this: JMain, op: JDispatchKeyType) {
         if (this.op.opSwitchKey == "key") {
             this.op.selectSingleKey = op.key;
             this.op.selectSingleType = op.type;
@@ -239,6 +234,12 @@ class JAction {
             this.saveOPJson();
             this.initCmdDiv();
         }
+    }
+
+    /** 触发键盘key的事件 */
+    dispatchKeyEvent(this: JMain, op: JDispatchKeyType) {
+        this.addHistoryKey(op);
+        this.singleDispatchKey(op);
     }
 
     /** 刷新皮肤 */

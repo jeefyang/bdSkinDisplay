@@ -1,7 +1,52 @@
+let historyKeyList: JDispatchKeyType[] = [];
+
 class JOPDiv {
+
+
+    /** 添加历史按键 */
+    addHistoryKey(this: JMain, op: JDispatchKeyType) {
+        for (let i = historyKeyList.length - 1; i >= 0; i--) {
+            if (historyKeyList[i].key == op.key) {
+                historyKeyList.splice(i, 1);
+            }
+        }
+        historyKeyList.push(op);
+        if (historyKeyList.length > 20) {
+            historyKeyList.shift();
+        }
+        this.refreshHistoryListDiv();
+    }
+
+
+    /** 重置历史按键 */
+    resetHistoryKeyList(this: JMain) {
+        historyKeyList = [];
+        this.refreshHistoryListDiv();
+    }
+
+    /** 刷新显示历史按键 */
+    refreshHistoryListDiv(this: JMain) {
+        const div = document.querySelector(".historyDiv");
+        if (!div) {
+            console.warn("找不到历史元素");
+            return;
+        }
+        div.innerHTML = "";
+        for (let i = historyKeyList.length - 1; i >= 0; i--) {
+            const c = historyKeyList[i];
+            const btn = document.createElement("button");
+            btn.style.marginRight = "5px";
+            btn.innerHTML = c.key;
+            btn.onclick = () => {
+                this.singleDispatchKey(c);
+            };
+            div.append(btn);
+        }
+    }
 
     /** 创建配置div */
     createOPDiv(this: JMain) {
+
         this.createScaleDiv();
         this.createSkinBoxMarginRightDiv();
         this.createSelectHLKeyDiv();
@@ -15,6 +60,7 @@ class JOPDiv {
                 name: "单键设置", func: () => {
                     this.op.opSwitchKey = "key";
                     this.op.selectSingleKey = "";
+                    this.resetHistoryKeyList();
                     this.saveOPJson();
                     new JMain();
                 }
@@ -24,6 +70,7 @@ class JOPDiv {
                     this.op.opSwitchKey = "multiKey";
                     this.op.selectSingleKey = "";
                     this.op.selectMultiKeyList = [];
+                    this.resetHistoryKeyList();
                     this.saveOPJson();
                     new JMain();
                 }
@@ -31,6 +78,8 @@ class JOPDiv {
             {
                 name: "列表设置", func: () => {
                     this.op.opSwitchKey = "list";
+                    this.resetHistoryKeyList();
+
                     this.saveOPJson();
                     new JMain();
                 }
@@ -38,6 +87,7 @@ class JOPDiv {
             {
                 name: "候选框设置", func: () => {
                     this.op.opSwitchKey = "cand";
+                    this.resetHistoryKeyList();
                     this.saveOPJson();
                     new JMain();
                 }
@@ -51,6 +101,12 @@ class JOPDiv {
                     saveJson(this.hintUrl, this.hintData);
                     saveJson(this.boardUrl, this.boardData);
                     console.log("保存成功");
+                }
+            },
+            {
+                name: "清空历史", func: () => {
+                    this.resetHistoryKeyList();
+
                 }
             },
             {
@@ -72,7 +128,10 @@ class JOPDiv {
             btnDiv.append(btn);
             btn.setAttribute("class", "opBtn");
         }
-        this.phoneOPDiv.append(btnDiv);
+        let historyDiv = document.createElement("div");
+        historyDiv.setAttribute("class", "historyDiv");
+        this.phoneOPDiv.append(btnDiv, historyDiv);
+        this.refreshHistoryListDiv();
     }
 
     /** 创建候选框选择div */
@@ -120,8 +179,8 @@ class JOPDiv {
             let formDiv = document.createElement("div");
             backDiv.append(formDiv);
             let count = 30;
-            let table: HTMLTableElement;
-            let tr: HTMLTableRowElement;
+            let table: HTMLTableElement | null = null;
+            // let tr: HTMLTableRowElement;
             for (let i = 0; i < this.statusDescList.length; i++) {
                 if (i % count == 0) {
                     table = document.createElement("table");
@@ -139,7 +198,10 @@ class JOPDiv {
                     new JMain();
                 };
                 tr.append(tdV, tdD);
-                table.append(tr);
+                if (table) {
+                    table.append(tr);
+
+                }
             }
         };
         this.phoneOPDiv.append(div);
@@ -328,7 +390,7 @@ class JOPDiv {
                     alert("没有任何修改,不用加载");
                     return;
                 }
-                op.inputFunc(input.value);
+                op!.inputFunc!(input.value);
                 this.saveOPJson();
                 new JMain();
             };
@@ -341,14 +403,14 @@ class JOPDiv {
             downloadBtn.innerHTML = "下载";
             downloadBtn.onclick = () => {
                 console.log("下载");
-                let str = jsonToIni(op.downloadData());
+                let str = jsonToIni(op.downloadData!());
                 saveStrFile(str, op.value + `${op?.exName || ""}`);
             };
             div.append(downloadBtn);
             const copyBtn = document.createElement("button");
             copyBtn.innerHTML = "复制文本";
             copyBtn.onclick = () => {
-                let str = jsonToIni(op.downloadData());
+                let str = jsonToIni(op.downloadData!());
                 copyStr(str);
             };
             div.append(copyBtn);
@@ -363,7 +425,7 @@ class JOPDiv {
             let readBtn = document.createElement("button");
             readBtn.innerHTML = "查看";
             readBtn.onclick = () => {
-                let str = jsonToIni(op.downloadData());
+                let str = jsonToIni(op.downloadData!());
                 console.log(str);
             };
             div.append(readBtn);

@@ -159,7 +159,7 @@ class JBoardChildDom {
             { key: "RIGHT", title: "向右划:", type: "key" },
             { key: "CENTER", title: "直接点击:", type: "key" },
             { key: "SHOW", title: "直接点击后传给内核的键值:", tip: "SHOW 的作用：向内核反馈点击此键后的键值,供内核判断该键类型.能在输入码上回馈键值." },
-            { key: "HOLD", title: "长按:", tip: "长按后对应的字符或功能\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLD=F1\n按住为 F1 打开符号面板\n注：HOLD=字符时,此字符会参与输入码." },
+            { key: "HOLD", title: "长按:", tip: "长按后对应的字符或功能\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLD=F1\n按住为 F1 打开符号面板\n注：HOLD=字符时,此字符会参与输入码.",type: "key" },
             { key: "HOLDSYM", title: "长按后对应的字符集:", tip: "（字符之间无分隔符）,以字符形式直接输出\n注：HOLD 与 HOLDSYM 不能共存,两者只能选一个.\n当一个键没有 HOLD 和 HOLDSYM 属性时,默认按住效是弹出的气泡显示该键的所有字符.\nHOLDSYM=ABCD@#\n表示长按对应的字符集是 ABCD@#\n然后通过手势选择字符,字符间无间隔.\n当 HOLDSYM=单字符时,表示此字符直接上屏." },
             { key: "STAT_STYLE", title: "针对特殊状态时的显示及样式及功能:", tip: "（状态补丁）\nS 代表状态类型,_后的数字表示 TIP 序号\n（详见 S 状态定义）\n当有多个状态时,状态之间用“|”间隔\nSTAT_STYLE=S4_1|S14_2\n表示 S4（有输入码状态）时,执行[TIP1]补丁,使该键在显示或功能上发生改变.在 S14（中文临时英文输入状态）时,执行[TIP2]", type: "speicalKey", isNotTipAttr: true },
             { key: "SPACE_VOICE_XY", title: "空格_语音_坐标:", tip: "(5.15+版新功能)\n长按空格语音图标的坐标定位,原点在空格按键矩阵的左上角\nSPACE_VOICE_XY=200,40" }

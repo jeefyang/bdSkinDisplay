@@ -1,0 +1,6 @@
+﻿Name=左/轻拟物/方形/14键/标准
+Style=default
+Author=公众号：森林集
+SupportPlatform=A
+SkinFlags=1
+VersionCode=2
